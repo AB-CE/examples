@@ -1,0 +1,6 @@
+{
+    "random_seed": 1498227012.348934,
+    "name": "abce",
+    "rounds": 300,
+    "grid": "not_serializeable"
+}
