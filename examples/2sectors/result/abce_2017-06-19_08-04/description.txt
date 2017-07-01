@@ -1,5 +1,0 @@
-{
-    "name": "abce",
-    "random_seed": 1497852252.6954384,
-    "rounds": 40
-}
