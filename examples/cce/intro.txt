@@ -1,0 +1,17 @@
+Introduction
+
+The following graphs show production and prices
+for all sectors. For the primary sectors the embedded
+CO2 is displayed. For the consumer it shows the
+welfare.
+
+
+Secondary sectors don't produce CO2 other than what
+is already accounted for in the primary sectors'
+CO2 output.
+
+The first 50 periods of the simulation are not
+displayed, as they serve to set up the model. At
+period 100, the new policy is implemented. The user
+can observe the CO2 output before and after the
+introduction of the new tax policy.

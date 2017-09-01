@@ -1,0 +1,17 @@
+household welfare
+Household welfare is the material
+welfare of the representative household
+in the economy.
+
+Generally an introduction of a tax
+decreases household welfare as the
+household allocates its resources to
+maximize its material welfare. When an
+individual is taxed, household resources
+cannot be allocated as freely, leading
+to an inferior outcome.
+
+However, we are not measuring direct or
+indirect benefits of the decrease in
+pollution, so it's possible that the
+actual welfare increases.

@@ -1,0 +1,10 @@
+col produced comment
+Often immediately after the introduction 
+of a new tax regime the economy reacts 
+very strongly or exhibits fluctuations. 
+This is a model limitation. In reality, 
+firms and consumers have foresight, which 
+gives them the ability to smooth their 
+production and consumption decisions.
+The model agents don't have this ability
+and therefore we see strong fluctuations.
