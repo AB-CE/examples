@@ -12,19 +12,17 @@ from market import Market
 from labormarket import LaborMarket
 from abce import Simulation, gui
 
-simulation_parameters = {
-    'name': 'Sticky Prices Microfoundations', 'rounds': 20}
 
 
-@gui(simulation_parameters)
-def main(simulation_parameters):
-    s = Simulation(**simulation_parameters)
+def main():
+    s = Simulation(name='Sticky Prices Microfoundations')
     s.declare_perishable('labor')
 
     firms = s.build_agents(Firm, 'firm', 1)
     market = s.build_agents(Market, 'market', 1)
     labormarket = s.build_agents(LaborMarket, 'labormarket', 1)
-    for r in s.next_round():
+    for r in range(20):
+        s.advance_round(r)
         firms.do('quote_hire')
         labormarket.do('accepting')
         firms.do('hire')
@@ -34,7 +32,7 @@ def main(simulation_parameters):
         firms.do('adjust_price')
         firms.do('adjust_quantity')
         market.do('consumption')
-
+    #s.finalize()
 
 if __name__ == '__main__':
-    main(simulation_parameters)
+    main()

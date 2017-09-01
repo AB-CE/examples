@@ -20,19 +20,21 @@ simulation_parameters = {'name': "analytical",
 
 @gui(simulation_parameters)
 def main(simulation_parameters):
-    s = Simulation(rounds=simulation_parameters['rounds'])
+    s = Simulation()
 
     firms = s.build_agents(
         Firm, 'firm', parameters=simulation_parameters, number=1)
     market = s.build_agents(
         Market, 'market', parameters=simulation_parameters, number=1)
-    for r in s.next_round():
+    for r in range(simulation_parameters['rounds']):
+        s.advance_round(r)
         firms.do('my_production')
         firms.do('selling')
         market.do('buying')
         firms.do('adjust_price')
         firms.do('adjust_quantity')
         market.do('consumption')
+    s.finalize()
 
 
 if __name__ == '__main__':

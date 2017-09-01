@@ -12,27 +12,26 @@ from household import Household
 from abce import Simulation, gui
 
 
-simulation_parameters = {'name': 'name',
+simulation_parameters = {
                          'random_seed': None,
                          'rounds': 300}
 
 
 @gui(simulation_parameters)
 def main(simulation_parameters):
-    s = Simulation(rounds=simulation_parameters['rounds'])
-    s.panel('household', possessions=['cookies'])
-    s.panel('firm', possessions=['cookies'])
+    s = Simulation()
 
     firms = s.build_agents(Firm, 'firm', 10)
     households = s.build_agents(Household, 'household', 10)
-    for r in s.next_round():
-        firms.do('production')
-        firms.do('panel')
+    for r in range(int(simulation_parameters['rounds'])):
+        s.advance_round(r)
+        firms.panel_log(possessions=['cookies'])
         firms.do('quote')
         households.do('buying')
         firms.do('selling')
-        households.do('panel')
+        households.panel_log(possessions=['cookies'])
         households.do('consumption')
+    s.finalize()
 
 
 if __name__ == '__main__':

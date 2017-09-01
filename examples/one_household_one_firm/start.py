@@ -6,7 +6,6 @@
     timeline.
 """
 
-from __future__ import division
 from abce import Simulation, gui
 from firm import Firm
 from household import Household
@@ -18,25 +17,25 @@ parameters = {'name': '2x2',
 
 @gui(parameters)
 def main(parameters):
-    w = Simulation(rounds=parameters['rounds'])
+    w = Simulation()
     w.declare_round_endowment(resource='adult', units=1, product='labor')
     w.declare_perishable(good='labor')
 
-    w.panel('household', possessions=['money', 'GOOD'],
-            variables=['current_utiliy'])
-    w.panel('firm', possessions=['money', 'GOOD'])
 
     firms = w.build_agents(Firm, 'firm', 1)
     households = w.build_agents(Household, 'household', 1)
-    for r in w.next_round():
-        households.do('sell_labor')
-        firms.do('buy_labor')
-        firms.do('production')
-        firms.do('panel')
-        firms.do('sell_goods')
-        households.do('buy_goods')
-        households.do('panel')
-        households.do('consumption')
+    for rnd in range(parameters['rounds']):
+        w.advance_round(rnd)
+        households.sell_labor()
+        firms.buy_labor()
+        firms.production()
+        firms.panel_log(possessions=['money', 'GOOD'])
+        firms.sell_goods()
+        households.buy_goods()
+        households.panel_log(possessions=['money', 'GOOD'],
+            variables=['current_utiliy'])
+        households.consumption()
+    w.finalize()
 
 
 if __name__ == '__main__':

@@ -29,4 +29,4 @@ class Household(abce.Agent, abce.Household):
         """ consumes_everything and logs the aggregate utility. current_utiliy
         """
         self.current_utiliy = self.consume_everything()
-        self.log_value('HH', self.current_utiliy)
+        self.log('HH', self.current_utiliy)

@@ -12,6 +12,7 @@ class Firm(abce.Agent, abce.Firm):
         self.mygood = "GOOD%i" % self.id  # GOOD1 if self.id == 1
         self.set_cobb_douglas(self.mygood, 1, {"labor": 1})
         self.price = random.random() * 2
+        self.inventory = 0
 
     def buy_labor(self):
         """ receives all labor offers and accepts them one by one """

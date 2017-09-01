@@ -6,7 +6,6 @@
     timeline.
 """
 
-from __future__ import division
 from abce import Simulation, gui
 from firm import Firm
 from household import Household
@@ -20,33 +19,35 @@ parameters = {'name': '2x2',
 
 
 def main(parameters):
-    simulation = Simulation(rounds=parameters['rounds'], processes=1)
-    simulation.declare_round_endowment(
-        resource='adult', units=1, product='labor')
+    simulation = Simulation(processes=1)
+    simulation.declare_round_endowment(resource='adult',
+                                       units=1,
+                                       product='labor')
     simulation.declare_perishable(good='labor')
 
-    simulation.aggregate('household', possessions=['money', 'GOOD'],
-                         variables=['current_utiliy'])
-    simulation.panel('firm', possessions=['money', 'GOOD'],
-                     variables=['price', 'inventory'])
 
     firms = simulation.build_agents(
         Firm, 'firm', number=parameters['num_firms'])
     households = simulation.build_agents(
         Household, 'household', number=1, parameters=parameters)
 
-    for r in simulation.next_round():
-        households.do('sell_labor')
-        firms.do('buy_labor')
-        firms.do('production')
-        firms.do('panel')
-        firms.do('quotes')
-        households.do('buy_goods')
-        firms.do('sell_goods')
-        households.do('aggregate')
-        households.do('consumption')
-        firms.do('adjust_price')
-
+    try:
+        for rnd in range(parameters['rounds']):
+            simulation.advance_round(rnd)
+            households.sell_labor()
+            firms.buy_labor()
+            firms.production()
+            firms.panel_log(possessions=['money', 'GOOD'],
+                            variables=['price', 'inventory'])
+            firms.quotes()
+            households.buy_goods()
+            firms.sell_goods()
+            households.agg_log(possessions=['money', 'GOOD'],
+                               variables=['current_utiliy'])
+            households.consumption()
+            firms.adjust_price()
+    except Exception as e:
+        print(e)
     simulation.graphs()
 
 

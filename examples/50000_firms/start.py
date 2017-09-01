@@ -5,20 +5,17 @@ from abce import Simulation
 
 
 def main():
-    parameters = {
-        'name': 'name',
-        'rounds': 10
-    }
-
-    s = Simulation(rounds=parameters['rounds'], processes=8)
+    s = Simulation(processes=8)
 
     myagents = s.build_agents(MyAgent, 'myagent', 50000)
     youragents = s.build_agents(YourAgent, 'youragent', 50000)
 
-    for r in s.next_round():
+    for r in range(100):
+        s.advance_round(r)
         # (myagents+youragents).do('compute')
-        youragents.do('s')
-        myagents.do('g')
+        youragents.s()
+        myagents.g()
+    s.finalize()
 
 
 if __name__ == '__main__':

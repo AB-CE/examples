@@ -4,42 +4,25 @@ from household import Household
 from messenger import Messenger
 from abce import Simulation, gui
 
-simulation_parameters = {'name': 'name',
-                         'rounds': 10,
-                         'firms': 1,
-                         'households': 0}
 
-# commend out simulation.graphs() and uncomment
-# this line to run the simulation with a Graphical
-# @gui(simulation_parameters) # User Interface
-
-
-def main(simulation_parameters):
-    simulation = Simulation(rounds=simulation_parameters['rounds'])
+def main():
+    simulation = Simulation()
 
     simulation.declare_round_endowment(resource='labor_endowment',
                                        units=1,
-                                       product='labor')
+                                       product='labor',
+                                       groups='household')
 
     simulation.declare_perishable(good='labor')
 
-    simulation.aggregate('household', possessions=[],  # put a list of household possessions to track here
-                         variables=['count'])  # put a list of household possessions to track here
+    firms = simulation.build_agents(Firm, 'firm', number=1)
 
-    simulation.aggregate('firm', possessions=[],  # put a list of household possessions to track here
-                         variables=['count'])  # put a list of household possessions to track here
-
-    firms = simulation.build_agents(Firm, 'firm',
-                                    number=simulation_parameters['firms'],
-                                    parameters=simulation_parameters)
-
-    households = simulation.build_agents(Household, 'household',
-                                         number=simulation_parameters['households'],
-                                         parameters=simulation_parameters)
+    households = simulation.build_agents(Household, 'household', number=1)
 
     messengers = simulation.build_agents(Messenger, 'messenger', 1)
 
-    for r in simulation.next_round():
+    for r in range(50):
+        simulation.advance_round(r)
         messengers.do('messaging')
         (firms + households).do('receive_message')
         firms.do('add_household')
@@ -47,9 +30,9 @@ def main(simulation_parameters):
         firms.do('print_id')
         households.do('print_id')
         # this instructs ABCE to save panel data as declared below
-        (firms + households).do('aggregate')
+        (firms + households).agg_log(variables=['count'])
     simulation.graphs()
 
 
 if __name__ == '__main__':
-    main(simulation_parameters)
+    main()

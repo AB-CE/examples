@@ -1,4 +1,3 @@
-from builtins import range
 from abce.agent import Agent
 from random import shuffle, randint
 
@@ -18,4 +17,4 @@ class YourAgent(Agent):
         self.create('cookie', 1)
         self.sell('myagent', randint(0, self.id),
                   good='cookie', price=0, quantity=1)
-        assert self.possession('cookie') == 0
+        assert self['cookie'] == 0
