@@ -9,7 +9,7 @@ from sam_to_functions import Sam
 from pprint import pprint
 import iotable
 from scipy import optimize
-from abce.abcegui import app
+
 
 title = "Computational Complete Economy Model on Climate Gas Reduction"
 
