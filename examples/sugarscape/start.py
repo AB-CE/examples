@@ -34,25 +34,21 @@ def main():
                             parameters={'grid': grid})
 
     prices = []
-    for r in range(800):
+    for r in range(100):
         s.advance_round(r)
         for sugar in sugars:
             sugar.step()
         for spice in spices:
             spice.step()
-        agents.do("move")
-        agents.do("eat")
-        pss = agents.do("trade_with_neighbors")
-        prices_1p = [ps for ps in pss if ps]
-        # flatten
-        prices_1p = [p for ps in prices_1p for p in ps]
-        mean_price = reduce(lambda x, y: x * y, prices_1p, 1) ** (1 / len(prices_1p))
-        prices.append(mean_price)
-    s.finalize()
-    pylab.plot(prices)
-    pylab.xlabel("Time")
-    pylab.ylabel("Mean Price")
-    pylab.savefig("prices.png")
+        agents.move()
+        agents.eat()
+        print(',', len(agents.trade_with_neighbors()))
+
+        agents.trade()
+        agents.agg_log(possessions=['sugar', 'spice'])
+
+
+    s.graphs()
 
 
 if __name__ == '__main__':

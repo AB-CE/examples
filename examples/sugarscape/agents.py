@@ -1,6 +1,6 @@
 import random
 import pylab
-from abce import Agent
+from abce import Agent, NotEnoughGoods
 
 
 def get_distance(pos_1, pos_2):
@@ -37,12 +37,13 @@ class SsAgent(Agent):
         self.grid = parameters["grid"]
         self.set_at_random_unoccupied_pos()
         self.grid.place_agent(self, self.pos)
-        self.sugar = random.randrange(25, 50)
-        self.spice = random.randrange(25, 50)
+        self.create('sugar', random.randrange(25, 50))
+        self.create('spice', random.randrange(25, 50))
         self.metabolism = random.randrange(1, 5)
         self.metabolism_spice = random.randrange(1, 5)
         self.vision = random.randrange(1, 6)
         self.prices = []
+        self.dead = False
 
     def set_at_random_unoccupied_pos(self):
         x = random.randrange(self.grid.width)
@@ -75,9 +76,9 @@ class SsAgent(Agent):
         return len(this_cell) > 2
 
     def move(self):
-        # hack this checkalive shouldn't be here
-        if not self.check_alive():
+        if self.dead:
             return
+        # hack this checkalive shouldn't be here
         # Epstein rule M
         # Get neighborhood within vision
         neighbors = [i for i in self.grid.get_neighborhood(self.pos, self.moore,
@@ -85,8 +86,8 @@ class SsAgent(Agent):
         neighbors.append(self.pos)
         eps = 0.0000001
         # Find the patch which produces maximum welfare
-        welfares = [self.welfare(self.sugar + self.get_sugar(pos).amount,
-                    self.spice + self.get_spice(pos).amount) for pos in neighbors]
+        welfares = [self.welfare(self['sugar'] + self.get_sugar(pos).amount,
+                    self['spice'] + self.get_spice(pos).amount) for pos in neighbors]
         max_welfare = max(welfares)
         candidate_indices = [i for i in range(len(welfares)) if abs(welfares[i] -
                              max_welfare) < eps]
@@ -97,8 +98,8 @@ class SsAgent(Agent):
         except:
             print(welfares)
             print(self.welfare())
-            print(self.sugar)
-            print(self.spice)
+            print(self['sugar'])
+            print(self['spice'])
             print(neighbors)
             exit()
         final_candidates = [pos for pos in candidates if abs(get_distance(self.pos,
@@ -107,88 +108,34 @@ class SsAgent(Agent):
         self.grid.move_agent(self, final_candidates[0])
 
     def eat(self):
-        if not self.check_alive():
-            return
         sugar_patch = self.get_sugar(self.pos)
         spice_patch = self.get_spice(self.pos)
-        self.sugar = self.sugar - self.metabolism + sugar_patch.amount
-        self.spice = self.spice - self.metabolism_spice + spice_patch.amount
+        try:
+            self.destroy('sugar', self.metabolism + sugar_patch.amount)
+            self.destroy('spice', self.metabolism_spice + spice_patch.amount)
+        except NotEnoughGoods:
+            self.delete_agent('SsAgent', self.id, quite=False)
+            self.grid.remove_agent(self)
+            self.dead = True
+
         sugar_patch.amount = 0
         spice_patch.amount = 0
-        self.check_alive()
 
-    def check_alive(self):
-        # Starved to death
-        if not self:
-            return False
-        if self.sugar <= 0 or self.spice <= 0:
-            try:
-                self.grid._remove_agent(self.pos, self)
-                self.delete_agent('SsAgent', self.id)
-            except:  # already died
-                pass
-            return False
-        return True
 
-    def sell_spice(self, other, price):
-        if price >= 1:
-            self.sugar += 1
-            other.sugar -= 1
-            self.spice -= int(price)
-            other.spice += int(price)
-        else:
-            self.sugar += int(1 / price)
-            other.sugar -= int(1 / price)
-            self.spice -= 1
-            other.spice += 1
-
-    def revert_sell_spice(self, other, price):
-        if price >= 1:
-            self.sugar += 1
-            other.sugar -= 1
-            self.spice -= price
-            other.spice += price
-        else:
-            self.sugar += 1 / price
-            other.sugar -= 1 / price
-            self.spice -= 1
-            other.spice += 1
-
-    def trade(self, other):
-        # Epstein rule T for a pair of agents, page 105
+    def sell_spice(self, other):
         mrs_self = self.calculate_MRS()
-        welfare_self = self.welfare()
-        welfare_other = other.welfare()
         mrs_other = other.calculate_MRS()
-        if mrs_self == mrs_other:
-            return
-        if self.sugar < 0 or self.spice < 0 or other.sugar < 0 or other.spice < 0:
-            return
-        if mrs_self < 0.01 or mrs_other < 0.01:
-            return
+
         price = pylab.sqrt(mrs_self * mrs_other)
-        self.prices.append(price)
-        if mrs_self > mrs_other:
-            # self is a sugar buyer
-            self.sell_spice(other, price)
-            if (welfare_self < self.welfare() or  # self is worse off
-               welfare_other < other.welfare() or  # other is worse off
-               self.calculate_MRS() < other.calculate_MRS()):  # self's MRS cross over other
-                self.revert_sell_spice(other, price)
-                return
-        else:
-            # self is a spice buyer
-            other.sell_spice(self, price)
-            if (welfare_self < self.welfare() or
-               welfare_other < other.welfare() or
-               self.calculate_MRS() > other.calculate_MRS()):
-                other.revert_sell_spice(self, price)
-                return
-        # continue trading
-        self.trade(other)
+        price = max(0.000000000001, price)
+        if self['spice'] >= 1:
+            self.sell(other.name, 'spice', quantity=1, price=price, currency='sugar')
+        if self['sugar'] >= 1:
+            quantity = min(1, self['sugar'] * price)
+            self.buy(other.name, 'spice', quantity=quantity, price=1 / price, currency='sugar')
 
     def trade_with_neighbors(self):
-        if not self.check_alive():
+        if self.dead:
             return
         # von Neumann neighbors
         neighbor_agents = [self.get_ssagent(pos) for pos in self.grid.get_neighborhood(self.pos, self.moore,
@@ -198,7 +145,7 @@ class SsAgent(Agent):
             count = 0
             for a in neighbor_agents:
                 if a:
-                    self.trade(a)
+                    self.sell_spice(a)
                     count += 1
             if count > 0:
                 prices = [p for p in self.prices if p]
@@ -207,16 +154,30 @@ class SsAgent(Agent):
                 return prices
         return []
 
+    def trade(self):
+        # Epstein rule T for a pair of agents, page 105
+        for offer in self.get_offers('spice'):
+            baseline = self.welfare()
+            if offer.buysell == 115:
+                welfare = self.welfare(spice=self['spice'] + 1, sugar=self['sugar'] - 1)
+            elif offer.buysell == 98:
+                welfare = self.welfare(spice=self['spice'] - 1, sugar=self['sugar'] + 1)
+            if welfare > baseline:
+                try:
+                    self.accept(offer)
+                except (NotEnoughGoods, KeyError):
+                    self.reject(offer)
+
     def welfare(self, sugar=None, spice=None):
         if sugar is None:
-            sugar = self.sugar
+            sugar = self['sugar']
         if spice is None:
-            spice = self.spice
+            spice = self['spice']
         m_total = self.metabolism + self.metabolism_spice
         return sugar ** (self.metabolism / m_total) * spice ** (self.metabolism_spice / m_total)
 
     def calculate_MRS(self):
-        return (self.spice / self.metabolism_spice) / (self.sugar / self.metabolism)
+        return (self['spice'] / self.metabolism_spice) / (self['sugar'] / self.metabolism)
 
     def compare_MRS(self, agent):
         return self.calculate_MRS() == agent.calculate_MRS()
