@@ -28,9 +28,7 @@ def main():
                     agents.fiveteens()
         agents.panel_log(possessions=['money'])
         agents.agg_log(possessions=['labor'])
-
-    #simulation.finalize()
-
+    simulation.finalize()
 
 if __name__ == '__main__':
     main()

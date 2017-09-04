@@ -28,12 +28,12 @@ def main(simulation_parameters):
         Market, 'market', parameters=simulation_parameters, number=1)
     for r in range(simulation_parameters['rounds']):
         s.advance_round(r)
-        firms.do('my_production')
-        firms.do('selling')
-        market.do('buying')
-        firms.do('adjust_price')
-        firms.do('adjust_quantity')
-        market.do('consumption')
+        firms.my_production()
+        firms.selling()
+        market.buying()
+        firms.adjust_price()
+        firms.adjust_quantity()
+        market.consumption()
     s.finalize()
 
 

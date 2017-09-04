@@ -24,6 +24,6 @@ class NetExport(abce.Agent):
             else:
                 self.accept(offer, offer.quantity * rationing)
 
-        self.give('household', 0, quantity=self.possession('money'), good='money')
+        self.give(('household', 0), quantity=self.possession('money'), good='money')
 
 

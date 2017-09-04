@@ -29,10 +29,8 @@ class MoneyModel(abce.Simulation):  # The actual simulation must inherit from Si
     function runs one round of the simulation. """
 
     def __init__(self, num_agents, x_size, y_size):
-        abce.Simulation.__init__(self,
-                                 name='ABCE and MESA integrated',
-                                 rounds=300,
-                                 processes=1)
+        super().__init__(name='ABCE and MESA integrated',
+                         processes=1)
         # initialization of the base class. MESA integration requires
         # single processing
         self.grid = MultiGrid(x_size, y_size, True)
@@ -47,18 +45,19 @@ class MoneyModel(abce.Simulation):  # The actual simulation must inherit from Si
         # components can access them
 
         self.wealths = [0 for _ in range(num_agents)]
+        self.r = 0
 
     def step(self):
         """ In every step the agent's methods are executed, every set the round
         counter needs to be increased by self.next_round() """
-        self.next_round()
+        self.advance_round(self.r)
         self.agents.do('move')
         self.agents.do('give_money')
         self.wealths = self.agents.do('report_wealth')
         # agents report there wealth in a list self.wealth
         self.datacollector.collect(self)
         # collects the data
-
+        self.r += 1
 
 if __name__ == '__main__':
     """ If you run model.py the simulation is executed without graphical

@@ -16,8 +16,7 @@ simulation_parameters = {'name': 'name',
 
 def main(simulation_parameters):
     w = Simulation()
-    w.declare_round_endowment(groups=['household'],
-        resource='labor_endowment', units=5, product='labor')
+    w.declare_round_endowment(resource='labor_endowment', units=5, product='labor')
     w.declare_perishable(good='labor')
 
     firms = w.build_agents(Firm, 'firm', 2)

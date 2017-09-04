@@ -26,7 +26,7 @@ class Firm(abce.Agent, abce.Firm):
         self.produce_use_everything()
 
     def quotes(self):
-        self.message('household', 0, 'quote', (self.mygood, self.price))
+        self.send(('household', 0), 'quote', (self.mygood, self.price))
 
     def sell_goods(self):
         """ offers one unit of labor to firm 0, for the price of 1 "money" """

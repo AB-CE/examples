@@ -27,7 +27,7 @@ class Firm(abce.Agent, abce.Firm, abce.Quote):
     def quote_hire(self):
         """ sends a note to the labor market, that  it is willing to pay wage """
         self.create('money', self.wage * self.production_target)
-        self.quote_buy('labormarket', 0, 'labor',
+        self.quote_buy(('labormarket', 0), 'labor',
                        self.possession('money') / self.wage, self.wage)
 
     def hire(self):

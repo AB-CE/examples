@@ -26,11 +26,11 @@ def main(simulation_parameters):
     for r in range(int(simulation_parameters['rounds'])):
         s.advance_round(r)
         firms.panel_log(possessions=['cookies'])
-        firms.do('quote')
-        households.do('buying')
-        firms.do('selling')
+        firms.quote()
+        households.buying()
+        firms.selling()
         households.panel_log(possessions=['cookies'])
-        households.do('consumption')
+        households.consumption()
     s.finalize()
 
 

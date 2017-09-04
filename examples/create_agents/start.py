@@ -10,8 +10,7 @@ def main():
 
     simulation.declare_round_endowment(resource='labor_endowment',
                                        units=1,
-                                       product='labor',
-                                       groups='household')
+                                       product='labor')
 
     simulation.declare_perishable(good='labor')
 
@@ -23,12 +22,12 @@ def main():
 
     for r in range(50):
         simulation.advance_round(r)
-        messengers.do('messaging')
-        (firms + households).do('receive_message')
-        firms.do('add_household')
-        firms.do('add_firm')
-        firms.do('print_id')
-        households.do('print_id')
+        messengers.messaging()
+        (firms + households).receive_message()
+        firms.add_household()
+        firms.add_firm()
+        firms.print_id()
+        households.print_id()
         # this instructs ABCE to save panel data as declared below
         (firms + households).agg_log(variables=['count'])
     simulation.graphs()

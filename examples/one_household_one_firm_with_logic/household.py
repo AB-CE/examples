@@ -20,7 +20,7 @@ class Household(abce.Agent, abce.Household):
     def sell_labor(self):
         """ offers one unit of labor to firm 0, for the price of 1 "money" """
         for i in range(self.num_firms):
-            self.sell('firm', i,
+            self.sell(('firm', i),
                       good="labor",
                       quantity=1 / self.num_firms,
                       price=1)
@@ -31,7 +31,7 @@ class Household(abce.Agent, abce.Household):
         quotes = self.get_messages('quote')
         for quote in quotes:
             price = quote.content[1]
-            self.buy('firm', quote.sender_id,
+            self.buy(quote.sender,
                      good=quote.content[0],
                      quantity=self.alpha * money / price,
                      price=price)

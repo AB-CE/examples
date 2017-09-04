@@ -43,7 +43,7 @@ class Firm(abce.Agent, abce.Firm, abce.Trade):
 
     def sell_intermediary_goods(self):
         if self.output == 'intermediate_good':
-            self.sell('firm', 1, "intermediate_good", 1, 1)
+            self.sell(('firm', 1), "intermediate_good", 1, 1)
         elif self.output == 'consumption_good':
             for i in range(2):
-                self.sell('household', i, 'consumption_good', 1, 1)
+                self.sell(('household', i), 'consumption_good', 1, 1)

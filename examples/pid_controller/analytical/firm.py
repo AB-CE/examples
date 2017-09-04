@@ -34,7 +34,7 @@ class Firm(abce.Agent, abce.Firm):
         self.dy[self.round % 20] = (self.price - self.price_1)
 
     def selling(self):
-        self.offer = self.sell('market', 0, 'cookies',
+        self.offer = self.sell(('market', 0), 'cookies',
                                self.possession('cookies'), self.price)
 
     def adjust_price(self):

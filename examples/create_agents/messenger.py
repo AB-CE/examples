@@ -11,8 +11,8 @@ class Messenger(abce.Agent):
     def messaging(self):
         max_firm = 2 ** self.round
         for id in range(max_firm):
-            self.message('firm', id, 'msg', id)
+            self.send(('firm', id), 'msg', id)
 
         max_hh = 2 ** self.round
         for id in range(max_hh):
-            self.message('household', id, 'msg', id)
+            self.send(('household', id), 'msg', id)

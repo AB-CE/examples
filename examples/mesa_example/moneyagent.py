@@ -28,7 +28,7 @@ class MoneyAgent(abce.Agent):
         if len(cellmates) > 1:
             other = random.choice(cellmates)
             try:
-                self.give(other.group, other.id, good='money', quantity=1)
+                self.give(other.name, good='money', quantity=1)
             except abce.NotEnoughGoods:
                 pass
 

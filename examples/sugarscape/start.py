@@ -11,7 +11,7 @@ import pylab
 
 
 def main():
-    s = Simulation(rounds=800, processes=1)
+    s = Simulation(processes=1)
     grid = MultiGrid(50, 50, True)
 
     # build sugar and spice
@@ -34,7 +34,8 @@ def main():
                             parameters={'grid': grid})
 
     prices = []
-    for r in s.next_round():
+    for r in range(800):
+        s.advance_round(r)
         for sugar in sugars:
             sugar.step()
         for spice in spices:
@@ -47,6 +48,7 @@ def main():
         prices_1p = [p for ps in prices_1p for p in ps]
         mean_price = reduce(lambda x, y: x * y, prices_1p, 1) ** (1 / len(prices_1p))
         prices.append(mean_price)
+    s.finalize()
     pylab.plot(prices)
     pylab.xlabel("Time")
     pylab.ylabel("Mean Price")

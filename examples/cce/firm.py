@@ -136,24 +136,24 @@ class Firm(abce.Agent, abce.Firm):
     def international_trade(self):
         if self.value_of_international_sales > 0:
             value = min(self.value_of_international_sales, self.possession(self.group))
-            sale = self.sell('netexport', 0, good=self.group, quantity=value, price=self.price)
+            sale = self.sell(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.sales.append(sale)
         else:
             value = min(- self.value_of_international_sales, self.possession('money') / self.price)
-            self.buy('netexport', 0, good=self.group, quantity=value, price=self.price)
+            self.buy(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.nx = value
 
     def invest(self):
         if self.value_of_investment > 0:
             value = min(self.value_of_investment, self.possession(self.group))
-            sale = self.sell('netexport', 0, good=self.group, quantity=value, price=self.price)
+            sale = self.sell(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.sales.append(sale)
 
 
     def send_demand(self):
         """ send nominal demand, according to weights to neighbor """
         for entity, id, good, _, weight in self.goods_details:
-            self.message(entity, id,
+            self.send((entity, id),
                          good,
                          weight * self.possession('money'))
 
@@ -178,22 +178,22 @@ class Firm(abce.Agent, abce.Firm):
             for msg in messages:
                 quantity = msg.content / self.price * rationing
                 assert not np.isnan(quantity), (msg.content, self.price, rationing)
-                sale = self.sell(msg.sender_group, receiver_id=msg.sender_id, good=self.group, quantity=quantity, price=self.price)
+                sale = self.sell(msg.sender, good=self.group, quantity=quantity, price=self.price)
                 self.sales.append(sale)
         else:
             for msg in messages:
-                sale = self.sell(msg.sender_group, receiver_id=msg.sender_id, good=self.group, quantity=0, price=self.price)
+                sale = self.sell((msg.sender_group, msg.sender_id), good=self.group, quantity=0, price=self.price)
                 self.sales.append(sale)
 
     def sales_tax(self):
         total_sales_quantity = sum([sale.final_quantity for sale in self.sales]) - self.nx
         tax = (total_sales_quantity * self.price) * self.output_tax_share
-        self.give('government', 0, good='money', quantity=min(self.possession('money'), tax))
+        self.give(('government', 0), good='money', quantity=min(self.possession('money'), tax))
         self.sales = []
 
     def carbon_taxes(self):
         carbon_tax = self.produced * self.carbon_prod * self.carbon_tax  * (1 - self.output_tax_share)
-        self.give('government', 0, good='money', quantity=min(self.possession('money'), carbon_tax))
+        self.give(('government', 0), good='money', quantity=min(self.possession('money'), carbon_tax))
 
     def buying(self):
         """ get offers from each neighbor, accept it and update
@@ -214,7 +214,7 @@ class Firm(abce.Agent, abce.Firm):
         """ pay dividends to household if profit is positive, calculate profits """
         self.profit = self.possession('money') - self.money_1
         earnings = max(0, self.profit)
-        self.give('household', 0, good='money', quantity=self.dividends_percent * earnings)
+        self.give(('household', 0), good='money', quantity=self.dividends_percent * earnings)
         self.money_1 = self.possession('money')
 
     def change_weights(self):
