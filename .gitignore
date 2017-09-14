@@ -10,3 +10,5 @@ abce/build/
 docs/_build/
 docs/builddir/
 **__pycache__*
+*.db
+
