@@ -5,7 +5,7 @@ from abce import Simulation
 
 
 def main():
-    s = Simulation(processes=8)
+    s = Simulation(processes=8, name='name')
 
     myagents = s.build_agents(MyAgent, 'myagent', 50000)
     youragents = s.build_agents(YourAgent, 'youragent', 50000)
