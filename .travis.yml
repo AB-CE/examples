@@ -1,0 +1,17 @@
+dist: trusty
+language: python
+notifications:
+  email: false
+cache:
+    pip: true
+matrix:
+  include:
+    - python: 3.5
+install:
+  - pip install -r requirements.txt
+  - pip install flake8
+
+script:
+  - flake8 examples --ignore=F403,E501,E123,E128,F401,F405,E402,F821,F841,E721,E265,F811
+  - cd examples
+  - cd 2sectors && python start.py && cd ..
