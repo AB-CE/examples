@@ -122,8 +122,8 @@ class SsAgent(Agent):
         spice_patch.amount = 0
 
     def sell_spice(self, other):
-        mrs_self = self.calculate_MRS()
-        mrs_other = other.calculate_MRS()
+        mrs_self = self._calculate_MRS()
+        mrs_other = other._calculate_MRS()
 
         price = pylab.sqrt(mrs_self * mrs_other)
         price = max(0.000000000001, price)
@@ -175,8 +175,8 @@ class SsAgent(Agent):
         m_total = self.metabolism + self.metabolism_spice
         return sugar ** (self.metabolism / m_total) * spice ** (self.metabolism_spice / m_total)
 
-    def calculate_MRS(self):
+    def _calculate_MRS(self):
         return (self['spice'] / self.metabolism_spice) / (self['sugar'] / self.metabolism)
 
-    def compare_MRS(self, agent):
-        return self.calculate_MRS() == agent.calculate_MRS()
+    def _compare_MRS(self, agent):
+        return self._calculate_MRS() == agent._calculate_MRS()
