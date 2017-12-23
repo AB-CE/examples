@@ -15,3 +15,12 @@ script:
   - flake8 examples --ignore=F403,E501,E123,E128,F401,F405,E402,F821,F841,E721,E265,F811,E302,E303,E741,E305
   - cd examples
   - cd 2sectors && python start.py && cd ..
+  - cd 50000_firms && python start.py && cd ..
+  - cd calendar && python start.py && cd ..
+  # - cd cce && python start.py && cd ..
+  - cd create_and_delete_agents && python start.py && cd ..
+  - cd mesa_example && python start.py && cd ..
+  - cd monetary_shocks && python start.py && cd ..
+  - cd one_household_one_firm_with_logic && python start.py && cd ..
+  # pid_controller
+  # sugarscape
