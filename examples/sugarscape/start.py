@@ -3,6 +3,9 @@ Sugarscape ({G1}, {M, T}) -- Epstein Chapter 4
 Heavily use Mesa for space.
 """
 
+import matplotlib
+matplotlib.use('TkAgg')
+
 from agents import SugarPatch, SpicePatch, SsAgent
 from abce import Simulation
 from mesa.space import MultiGrid

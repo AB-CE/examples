@@ -131,6 +131,9 @@ class SsAgent(Agent):
         self.grid.move_agent(self, final_candidates[0])
 
     def eat(self):
+        if self.dead:
+            return
+
         # Fetch sugar and spice patch
         sugar_patch = self.get_sugar(self.pos)
         spice_patch = self.get_spice(self.pos)
