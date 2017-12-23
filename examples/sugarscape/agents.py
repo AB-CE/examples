@@ -4,6 +4,9 @@ from abce import Agent, NotEnoughGoods
 
 
 def get_distance(pos_1, pos_2):
+    """
+    Calculate euclidean distance between two positions.
+    """
     x1, y1 = pos_1
     x2, y2 = pos_2
     dx = x1 - x2
@@ -11,7 +14,12 @@ def get_distance(pos_1, pos_2):
     return pylab.sqrt(dx ** 2 + dy ** 2)
 
 
-class Sugar(Agent):
+class SugarPatch(Agent):
+    """
+    Sugar is a FSM that
+    - contains an amount of sugar
+    - grows 1 amount of sugar at each turn.
+    """
     def __init__(self, pos, max_sugar):
         self.pos = pos
         self.amount = max_sugar
@@ -21,7 +29,12 @@ class Sugar(Agent):
         self.amount = min([self.max_sugar, self.amount + 1])
 
 
-class Spice(Agent):
+class SpicePatch(Agent):
+    """
+    Spice is a FSM that
+    - contains an amount of spice
+    - grows 1 amount of spice at each turn.
+    """
     def __init__(self, pos, max_spice):
         self.pos = pos
         self.amount = max_spice
@@ -37,11 +50,16 @@ class SsAgent(Agent):
         self.grid = parameters["grid"]
         self.set_at_random_unoccupied_pos()
         self.grid.place_agent(self, self.pos)
+
+        # Each agent is endowed by a random amount of sugar and spice
         self.create('sugar', random.randrange(25, 50))
         self.create('spice', random.randrange(25, 50))
+
+        # Each agent's phenotype is initialized with random value
         self.metabolism = random.randrange(1, 5)
         self.metabolism_spice = random.randrange(1, 5)
         self.vision = random.randrange(1, 6)
+
         self.prices = []
         self.dead = False
 
@@ -56,13 +74,13 @@ class SsAgent(Agent):
     def get_sugar(self, pos):
         this_cell = self.grid.get_cell_list_contents([pos])
         for agent in this_cell:
-            if type(agent) is Sugar:
+            if type(agent) is SugarPatch:
                 return agent
 
     def get_spice(self, pos):
         this_cell = self.grid.get_cell_list_contents([pos])
         for agent in this_cell:
-            if type(agent) is Spice:
+            if type(agent) is SpicePatch:
                 return agent
 
     def get_ssagent(self, pos):
@@ -78,21 +96,24 @@ class SsAgent(Agent):
     def move(self):
         if self.dead:
             return
-        # hack this checkalive shouldn't be here
+
         # Epstein rule M
-        # Get neighborhood within vision
+
+        # 1. Get neighborhood within vision.
         neighbors = [i for i in self.grid.get_neighborhood(self.pos, self.moore,
                      False, radius=self.vision) if not self.is_occupied(i)]
         neighbors.append(self.pos)
         eps = 0.0000001
-        # Find the patch which produces maximum welfare
+
+        # 2. Find the patch which produces maximum welfare.
         welfares = [self.welfare(self['sugar'] + self.get_sugar(pos).amount,
                     self['spice'] + self.get_spice(pos).amount) for pos in neighbors]
         max_welfare = max(welfares)
         candidate_indices = [i for i in range(len(welfares)) if abs(welfares[i] -
                              max_welfare) < eps]
         candidates = [neighbors[i] for i in candidate_indices]
-        # Find the nearest patch among the candidate
+
+        # 3. Find the nearest patch among the candidate.
         try:
             min_dist = min([get_distance(self.pos, pos) for pos in candidates])
         except Exception:
@@ -105,14 +126,18 @@ class SsAgent(Agent):
         final_candidates = [pos for pos in candidates if abs(get_distance(self.pos,
                             pos) - min_dist) < eps]
         random.shuffle(final_candidates)
+
+        # 4. Move agent.
         self.grid.move_agent(self, final_candidates[0])
 
     def eat(self):
         sugar_patch = self.get_sugar(self.pos)
         spice_patch = self.get_spice(self.pos)
+
+        # Metabolize
         try:
-            self.destroy('sugar', self.metabolism + sugar_patch.amount)
-            self.destroy('spice', self.metabolism_spice + spice_patch.amount)
+            self.destroy('sugar', self.metabolism - sugar_patch.amount)
+            self.destroy('spice', self.metabolism_spice - spice_patch.amount)
         except NotEnoughGoods:
             self.delete_agent('SsAgent', self.id, quite=False)
             self.grid.remove_agent(self)
