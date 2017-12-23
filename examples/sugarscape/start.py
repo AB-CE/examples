@@ -3,10 +3,9 @@ Sugarscape ({G1}, {M, T}) -- Epstein Chapter 4
 Heavily use Mesa for space.
 """
 
-from agents import Sugar, Spice, SsAgent
+from agents import SugarPatch, SpicePatch, SsAgent
 from abce import Simulation
 from mesa.space import MultiGrid
-from functools import reduce
 import pylab
 
 
@@ -22,8 +21,8 @@ def main():
     for _, x, y in grid.coord_iter():
         max_sugar = sugar_distribution[x, y]
         max_spice = spice_distribution[x, y]
-        sugar = Sugar((x, y), max_sugar)
-        spice = Spice((x, y), max_spice)
+        sugar = SugarPatch((x, y), max_sugar)
+        spice = SpicePatch((x, y), max_spice)
         sugars.append(sugar)
         spices.append(spice)
         grid.place_agent(sugar, (x, y))
@@ -33,7 +32,7 @@ def main():
     agents = s.build_agents(SsAgent, 'SsAgent', 100,
                             parameters={'grid': grid})
 
-    prices = []
+    # prices = []
     for r in range(100):
         s.advance_round(r)
         for sugar in sugars:
@@ -46,7 +45,6 @@ def main():
 
         agents.trade()
         agents.agg_log(possessions=['sugar', 'spice'])
-
 
     s.graphs()
 
