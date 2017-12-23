@@ -10,8 +10,7 @@ from __future__ import division
 from firm import Firm
 from market import Market
 from labormarket import LaborMarket
-from abce import Simulation, gui
-
+from abce import Simulation
 
 
 def main():
@@ -32,7 +31,8 @@ def main():
         firms.do('adjust_price')
         firms.do('adjust_quantity')
         market.do('consumption')
-    #s.finalize()
+    # s.finalize()
+
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,4 @@
 import abce
-from abce import NotEnoughGoods
 
 
 class NetExport(abce.Agent):
@@ -25,5 +24,3 @@ class NetExport(abce.Agent):
                 self.accept(offer, offer.quantity * rationing)
 
         self.give(('household', 0), quantity=self.possession('money'), good='money')
-
-

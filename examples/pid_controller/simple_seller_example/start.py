@@ -12,8 +12,7 @@ from household import Household
 from abce import Simulation, gui
 
 
-simulation_parameters = {
-                         'random_seed': None,
+simulation_parameters = {'random_seed': None,
                          'rounds': 300}
 
 

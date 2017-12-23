@@ -1,13 +1,12 @@
 #pylint: disable=W0201
-import abce
-from abce import NotEnoughGoods
 import random
-import numpy as np
-from optimization_functions import optimization
 from copy import copy
 from collections import OrderedDict
-from pprint import pprint
 import itertools
+
+import numpy as np
+import abce
+from optimization_functions import optimization
 
 def normalized_random(length):
     random_values = [random.uniform(0.1, 0.9) for _ in range(length)]
@@ -149,13 +148,12 @@ class Firm(abce.Agent, abce.Firm):
             sale = self.sell(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.sales.append(sale)
 
-
     def send_demand(self):
         """ send nominal demand, according to weights to neighbor """
         for entity, id, good, _, weight in self.goods_details:
             self.send((entity, id),
-                         good,
-                         weight * self.possession('money'))
+                      good,
+                      weight * self.possession('money'))
 
     def selling(self):
         """ receive demand from neighbors and consumer;
@@ -167,7 +165,7 @@ class Firm(abce.Agent, abce.Firm):
         nominal_demand = [msg.content for msg in messages]
         self.nominal_demand = sum(nominal_demand)
         if self.possession(self.group) > 0:
-            market_clearing_price = (sum(nominal_demand) / self.possession(self.group) )
+            market_clearing_price = (sum(nominal_demand) / self.possession(self.group))
             self.price = (1 - self.price_stickiness) * market_clearing_price + self.price_stickiness * self.price
             demand = sum([msg.content / self.price for msg in messages])
             if demand < self.possession(self.group):
@@ -192,7 +190,7 @@ class Firm(abce.Agent, abce.Firm):
         self.sales = []
 
     def carbon_taxes(self):
-        carbon_tax = self.produced * self.carbon_prod * self.carbon_tax  * (1 - self.output_tax_share)
+        carbon_tax = self.produced * self.carbon_prod * self.carbon_tax * (1 - self.output_tax_share)
         self.give(('government', 0), good='money', quantity=min(self.possession('money'), carbon_tax))
 
     def buying(self):
@@ -224,8 +222,8 @@ class Firm(abce.Agent, abce.Firm):
                            beta=self.goods_details.betas,
                            method='SLSQP')
         if not opt.success:
-            print (self.round, self.name, opt.message)
-            print (zip(self.goods_details.goods.keys(), self.goods_details.list_of_cheapest_offers().tolist()))
+            print(self.round, self.name, opt.message)
+            print(zip(self.goods_details.goods.keys(), self.goods_details.list_of_cheapest_offers().tolist()))
             raise Exception('Optimization error')
 
         self.seed_weights = opt.x
@@ -234,8 +232,8 @@ class Firm(abce.Agent, abce.Firm):
         self.goods_details.update_weights_optimal_from_partial_list(opt.x)
         optimal_weights = self.goods_details.weights_as_list()
 
-        weights = (self.network_weight_stickiness * old_weighs
-                   + (1 - self.network_weight_stickiness) * optimal_weights)
+        weights = (self.network_weight_stickiness * old_weighs +
+                   (1 - self.network_weight_stickiness) * optimal_weights)
 
         weights = weights / sum(weights)
 

@@ -95,7 +95,7 @@ class SsAgent(Agent):
         # Find the nearest patch among the candidate
         try:
             min_dist = min([get_distance(self.pos, pos) for pos in candidates])
-        except:
+        except Exception:
             print(welfares)
             print(self.welfare())
             print(self['sugar'])
@@ -120,7 +120,6 @@ class SsAgent(Agent):
 
         sugar_patch.amount = 0
         spice_patch.amount = 0
-
 
     def sell_spice(self, other):
         mrs_self = self.calculate_MRS()
@@ -150,7 +149,7 @@ class SsAgent(Agent):
             if count > 0:
                 prices = [p for p in self.prices if p]
                 self.prices = []
-                #print("%d Traded with %d out of %d neighbors" % (self.id, count, len(neighbor_agents)))
+                # print("%d Traded with %d out of %d neighbors" % (self.id, count, len(neighbor_agents)))
                 return prices
         return []
 

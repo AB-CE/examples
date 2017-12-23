@@ -59,6 +59,7 @@ class MoneyModel(abce.Simulation):  # The actual simulation must inherit from Si
         # collects the data
         self.r += 1
 
+
 if __name__ == '__main__':
     """ If you run model.py the simulation is executed without graphical
     representation """

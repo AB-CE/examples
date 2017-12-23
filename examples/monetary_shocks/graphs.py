@@ -1,5 +1,4 @@
 __author__ = 'taghawi'
-import pygal as pg
 import pandas as pd
 import seaborn as sb
 import matplotlib.pyplot as plt
@@ -7,8 +6,7 @@ from ggplot import *
 
 
 def graph():
-
-    #centralbank = pd.read_csv('aggregate_centralbank.csv').ix[20:]
+    # centralbank = pd.read_csv('aggregate_centralbank.csv').ix[20:]
     firm = pd.read_csv('aggregate_firm.csv').ix[400:600]
     hh = pd.read_csv('aggregate_household.csv').ix[400:600]
 
@@ -31,7 +29,7 @@ def graph():
 
     ax[1][0].set_title('price_std')
     ax2 = ax[1][0].twinx()
-    sb.tsplot(data=firm['price_std'] , ax=ax2)
+    sb.tsplot(data=firm['price_std'], ax=ax2)
     sb.tsplot(data=firm['money'], ax=ax[1][0], color='r')
 
     ax[2][0].set_title('price coef of variation')

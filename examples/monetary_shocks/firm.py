@@ -11,7 +11,7 @@ epsilon = 1 / 10000
 
 
 def good_from_id(idn):
-    return  'g%i' % idn
+    return 'g%i' % idn
 
 def normalized_random(length):
     random_values = [random.uniform(0.1, 0.9) for _ in range(length)]
@@ -32,7 +32,7 @@ class Firm(abce.Agent, abce.Firm):
         self.neighbors_goods = [good_from_id(idn) for idn in self.neighbors]
         self.mygood = good_from_id(self.id)
 
-        prices = np.array([1.0 for _ in  range(len(self.neighbors) + 1)], dtype=float)
+        prices = np.array([1.0 for _ in range(len(self.neighbors) + 1)], dtype=float)
         self.neighbor_prices = prices[:-1]
         self.wage = prices[-1]
 
@@ -127,16 +127,13 @@ class Firm(abce.Agent, abce.Firm):
                                l=self.alpha,
                                one_minus_l=1 - self.alpha)
             if not opt.success:
-                print(self.name, opt.message, (len(seed_weights)))#, self.neighbor_prices, self.seed_weights)
+                print(self.name, opt.message, (len(seed_weights)))  # , self.neighbor_prices, self.seed_weights)
                 seed_weights = normalized_random(len(seed_weights))
             else:
                 break
 
-
-
         optimal_weights_non_labor, optimal_weights_labor = opt.x[:-1], opt.x[-1]
         return opt.x, optimal_weights_non_labor, optimal_weights_labor
-
 
     def change_weights(self):
         optx, optimal_weights_non_labor, optimal_weights_labor = self._change_weights(self.neighbor_prices,
@@ -144,10 +141,10 @@ class Firm(abce.Agent, abce.Firm):
         self.seed_weights = optx
         if any(self.seed_weights <= 0):
             self.seed_weights = normalized_random(len(self.seed_weights))
-        self.weights = (self.network_weight_stickiness * self.weights
-                        + (1 - self.network_weight_stickiness) * optimal_weights_non_labor)
-        self.labor_weight = (self.network_weight_stickiness * self.labor_weight
-                             + (1 - self.network_weight_stickiness) * optimal_weights_labor)
+        self.weights = (self.network_weight_stickiness * self.weights +
+                        (1 - self.network_weight_stickiness) * optimal_weights_non_labor)
+        self.labor_weight = (self.network_weight_stickiness * self.labor_weight +
+                             (1 - self.network_weight_stickiness) * optimal_weights_labor)
         summe = np.nextafter(sum(self.weights) + self.labor_weight, 2)
         self.weights = np.nextafter(self.weights / summe, 0)
         self.labor_weight = np.nextafter(self.labor_weight / summe, 0)

@@ -1,9 +1,6 @@
 import abce
 import random
-import numpy as np
 from optimization_functions import optimization
-from copy import copy
-from collections import defaultdict
 
 
 class CentralBank(abce.Agent):
@@ -26,4 +23,3 @@ class CentralBank(abce.Agent):
                 self.give(msg.sender,
                           good='money',
                           quantity=msg.content['money'] / money_beneficiaries * injection)
-

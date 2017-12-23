@@ -12,7 +12,6 @@ class Household(abce.Agent, abce.Household):
         self.utility = 0
         self.wage = 0.5
 
-
     def send_demand(self):
         for i in range(self.num_firms):
             self.send(('firm', i), 'nominal_demand', 1 / self.num_firms * self.not_reserved("money"))
@@ -34,7 +33,7 @@ class Household(abce.Agent, abce.Household):
             self.rationing = rationing = max(0, self.not_reserved('labor') / demand - epsilon)
 
         for msg in messages:
-            self.sell(msg.sender,  good='labor', quantity=msg.content / self.wage * rationing, price=self.wage)
+            self.sell(msg.sender, good='labor', quantity=msg.content / self.wage * rationing, price=self.wage)
 
     def buying(self):
         for neighbor in range(self.num_firms):

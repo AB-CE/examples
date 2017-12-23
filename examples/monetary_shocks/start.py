@@ -38,7 +38,7 @@ def main():
                              'time_of_intervention': 250}
     s = Simulation(name=simulation_parameters['name'])
 
-    s.declare_service('labor_endowment', 1 , 'labor')
+    s.declare_service('labor_endowment', 1, 'labor')
 
     network = create_network(simulation_parameters['num_firms'])
     network = [network.neighbors(neighbor) for neighbor in range(simulation_parameters['num_firms'])]
@@ -64,6 +64,6 @@ def main():
                       variables=['produced', 'profit', 'price', 'dead', 'inventory', 'rationing'])
     s.graphs()
 
+
 if __name__ == '__main__':
     main()
-

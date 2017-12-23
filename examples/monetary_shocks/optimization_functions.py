@@ -1,5 +1,4 @@
 from scipy.optimize import minimize
-import numpy as np
 from numba import jit
 
 
@@ -26,15 +25,15 @@ def optimization(seed_weights,
                  l,
                  one_minus_l):
 
-    args=(input_prices,
-          wage,
-          gamma,
-          one_by_gamma,
-          l,
-          one_minus_l)
+    args = (input_prices,
+            wage,
+            gamma,
+            one_by_gamma,
+            l,
+            one_minus_l)
 
-    cons = ({'type':'eq','fun':lambda x: 1 - x.sum()})
-    bnds = [(0,1) for _ in range(len(seed_weights))]
+    cons = ({'type': 'eq', 'fun': lambda x: 1 - x.sum()})
+    bnds = [(0, 1) for _ in range(len(seed_weights))]
 
     return minimize(F, seed_weights, args=args, constraints=cons, bounds=bnds, method='SLSQP',
-                    options = {'maxiter': 100000})
+                    options={'maxiter': 100000})

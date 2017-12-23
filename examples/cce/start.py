@@ -4,11 +4,8 @@ from netexport import NetExport
 from government import Government
 from abce import Simulation, gui
 from collections import OrderedDict, defaultdict
-import os
 from sam_to_functions import Sam
-from pprint import pprint
 import iotable
-from scipy import optimize
 
 
 title = "Computational Complete Economy Model on Climate Gas Reduction"
@@ -66,7 +63,6 @@ def main(simulation_parameters):
     """ this is the co2 output per sector at the base year """
     print(sam.output_tax_shares())
 
-
     simulation_parameters.update({'name': 'cce',
                                   'random_seed': None,
                                   'num_household': 1,
@@ -89,23 +85,17 @@ def main(simulation_parameters):
                                   'price_stickiness': 0.5,
                                   'network_weight_stickiness': 0.5})
 
-
     simulation = Simulation(trade_logging='group', processes=1)
-
-
 
     simulation.declare_service('endowment_FFcap', 1, 'cap')
     simulation.declare_service('endowment_FFlab', 1, 'lab')
     """ every round for every endowment_FFcap the owner gets one good of lab
     similar for cap"""
 
-
-
-
     firms = {good: simulation.build_agents(Firm,
-                                     number=simulation_parameters['num_firms'],
-                                     group_name=good,
-                                     parameters=simulation_parameters)
+                                           number=simulation_parameters['num_firms'],
+                                           group_name=good,
+                                           parameters=simulation_parameters)
              for good in sam.outputs}
     household = simulation.build_agents(Household, 'household', simulation_parameters['num_household'], parameters=simulation_parameters)
     netexport = simulation.build_agents(NetExport, 'netexport', 1, parameters=simulation_parameters)
@@ -144,11 +134,11 @@ def main(simulation_parameters):
         print(e)
 
     simulation.finalize()
-        # raise  # put raise for full traceback but no graphs in case of error
+    # raise  # put raise for full traceback but no graphs in case of error
     iotable.to_iotable(simulation.path, [99, simulation_parameters['rounds'] - 1])
     mean_price = iotable.average_price(simulation.path, 99)
     print('mean price', mean_price)
-    #simulation.graphs()
+    # simulation.graphs()
     return mean_price
 
 def F(money):
@@ -161,5 +151,5 @@ def F(money):
 
 if __name__ == '__main__':
     main()
-    #opt =  optimize.minimize_scalar(F, bracket=(2685, 2750), bounds=(2685, 2750), method='brent', options={'xtol': 0.000000000001})
-    #print opt
+    # opt =  optimize.minimize_scalar(F, bracket=(2685, 2750), bounds=(2685, 2750), method='brent', options={'xtol': 0.000000000001})
+    # print(opt)

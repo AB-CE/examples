@@ -1,5 +1,4 @@
 import csv
-from pprint import pprint
 from collections import defaultdict
 from copy import copy
 import numpy as np
@@ -20,7 +19,7 @@ class Sam():
         self.consumption, self.consumers = consumption, consumers
 
         entries = defaultdict(dict)
-        with open(name,'rU') as csvfile:
+        with open(name, 'rU') as csvfile:
             reader = csv.DictReader(csvfile)
             fields = copy(reader.fieldnames)
             fields.remove('index')
@@ -42,7 +41,7 @@ class Sam():
     def utility_function(self):
         """ the utility functions exponents as values in a dict """
         entries, column_sum = self.entries, self.column_sum
-        output_tax_shares = self.output_tax_shares()
+        # output_tax_shares = self.output_tax_shares()
 
         utility_functions = {}
         for consumer in self.consumers:
@@ -72,10 +71,9 @@ class Sam():
             for input in ['cap', 'lab']:
                 betas[firm][input] = entries[input][firm] / ((1 - output_tax_shares[firm]) * column_sum[firm])
 
-
-            b[firm] = (column_sum[firm]
-                       / np.prod([entries[input][firm] ** betas[firm][input]
-                                  for input in self.inputs]))
+            b[firm] = (column_sum[firm] /
+                       np.prod([entries[input][firm] ** betas[firm][input]
+                                for input in self.inputs]))
 
             production_functions[firm] = (b[firm], dict(betas[firm]))
 
@@ -86,9 +84,9 @@ class Sam():
         entries, column_sum, output_tax = self.entries, self.column_sum, self.output_tax
         output_tax_shares = {}
         for firm in self.outputs:
-            output_tax_shares[firm] = (entries[output_tax][firm]
-                                       / (sum([entries[input][firm]
-                                              for input in self.inputs]) + entries[output_tax][firm]))
+            output_tax_shares[firm] = (entries[output_tax][firm] /
+                                       (sum([entries[input][firm]
+                                             for input in self.inputs]) + entries[output_tax][firm]))
         output_tax_shares['cap'] = output_tax_shares['lab'] = 0
         return output_tax_shares
 
@@ -113,6 +111,3 @@ class Sam():
 
     def balance_of_payment(self, netexport, investment):
         return self.entries[investment][netexport]
-
-
-

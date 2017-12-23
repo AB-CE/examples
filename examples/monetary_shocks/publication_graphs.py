@@ -1,5 +1,4 @@
 __author__ = 'taghawi'
-import pygal as pg
 import pandas as pd
 import seaborn as sb
 import matplotlib.pyplot as plt
@@ -10,13 +9,13 @@ import os
 
 directory = './result'
 all_subdirs = [os.path.join(directory, name)
-                   for name in os.listdir(directory)
-                   if os.path.isdir(os.path.join(directory, name))]
+               for name in os.listdir(directory)
+               if os.path.isdir(os.path.join(directory, name))]
 
 files = dict(zip(all_subdirs, all_subdirs))
 
 def graph(name, show):
-    #centralbank = pd.read_csv('aggregate_centralbank.csv').ix[20:]
+    # centralbank = pd.read_csv('aggregate_centralbank.csv').ix[20:]
     firm = pd.read_csv('aggregate_firm.csv').ix[100:300]
 
     fig, ax = plt.subplots(nrows=3)
@@ -69,7 +68,7 @@ def bins(name, show):
 
     plt = ggplot(bin, aes(0)) + stat_bin() + ggtitle(name)
     if show:
-        print plt
+        print(plt)
     ggsave(filename='../bin_%s.png' % name, plot=plt, dpi=150)
 
 if __name__ == '__main__':
@@ -77,7 +76,7 @@ if __name__ == '__main__':
 
     for directory, name in files.iteritems():
         chdir(directory)
-        print directory
+        print(directory)
         graph(name, show)
-        #bins(name, show)
+        # bins(name, show)
         chdir('../..')

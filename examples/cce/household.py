@@ -10,7 +10,7 @@ class Household(abce.Agent, abce.Household):
         self.wage_stickiness = simulation_parameters['wage_stickiness']
         money = simulation_parameters['money'] / 2
 
-        self.create('money', money )
+        self.create('money', money)
         self.utility = 0
 
         self.final_goods = simulation_parameters['final_goods']
@@ -28,7 +28,6 @@ class Household(abce.Agent, abce.Household):
                 demand = self.alpha[final_good] / self.num_firms * self.possession("money")
                 if demand > 0:
                     self.send((final_good, i), final_good, demand)
-
 
     def selling(self):
         """ receive demand from neighbors and consumer;
@@ -70,4 +69,3 @@ class Household(abce.Agent, abce.Household):
 
     def consuming(self):
         self.welfare = self.consume_everything()
-
