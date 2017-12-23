@@ -131,20 +131,24 @@ class SsAgent(Agent):
         self.grid.move_agent(self, final_candidates[0])
 
     def eat(self):
+        # Fetch sugar and spice patch
         sugar_patch = self.get_sugar(self.pos)
         spice_patch = self.get_spice(self.pos)
 
+        # Harvest sugar and spice
+        self.create('sugar', sugar_patch.amount)
+        self.create('spice', spice_patch.amount)
+        sugar_patch.amount = 0
+        spice_patch.amount = 0
+
         # Metabolize
         try:
-            self.destroy('sugar', self.metabolism - sugar_patch.amount)
-            self.destroy('spice', self.metabolism_spice - spice_patch.amount)
+            self.destroy('sugar', self.metabolism)
+            self.destroy('spice', self.metabolism_spice)
         except NotEnoughGoods:
             self.delete_agent('SsAgent', self.id, quite=False)
             self.grid.remove_agent(self)
             self.dead = True
-
-        sugar_patch.amount = 0
-        spice_patch.amount = 0
 
     def sell_spice(self, other):
         mrs_self = self._calculate_MRS()
