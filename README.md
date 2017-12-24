@@ -11,9 +11,7 @@ then run the start.py file from one of the examples.
 - [2sectors](examples/2sectors): The "hello, world!" of ABCE
 - [50000_firms](examples/50000_firms): Title says it all - 50k firms up and running
 - [calendar](examples/calendar): Shows how day/month can be incorporated
-- [create_agents](examples/create_agents): A simple illustration of how to create agents during a
-  simulation
-- [delete_agent](examples/delete_agent): A simple illustration of how to delete agents during a
+- [create_and_delete_agents](examples/create_and_delete_agents): A simple illustration of how to create/delete agents during a
   simulation
 - [mesa_example](examples/mesa_example): A simple model of how to integrate ABCE and Mesa. The model and
   scheduler are implemented with ABCE while the space is implemented with Mesa.
