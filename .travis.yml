@@ -9,6 +9,7 @@ matrix:
     - python: 3.5
 install:
   - pip install -r requirements.txt
+  - pip install mesa  # for mesa_example
   - pip install flake8
 
 script:
