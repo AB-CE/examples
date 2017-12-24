@@ -9,7 +9,7 @@ from household import Household
 simulation_parameters = {'name': 'name',
                          'trade_logging': 'off',
                          'random_seed': None,
-                         'rounds': 40}
+                         'rounds': 10}
 
 #@gui(simulation_parameters)
 
