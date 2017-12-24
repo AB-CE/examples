@@ -16,15 +16,12 @@ parameters = {'name': '2x2',
               'num_firms': 10}
 
 #@gui(parameters)
-
-
 def main(parameters):
     simulation = Simulation(processes=1)
     simulation.declare_round_endowment(resource='adult',
                                        units=1,
                                        product='labor')
     simulation.declare_perishable(good='labor')
-
 
     firms = simulation.build_agents(
         Firm, 'firm', number=parameters['num_firms'])
@@ -48,7 +45,7 @@ def main(parameters):
             firms.adjust_price()
     except Exception as e:
         print(e)
-    simulation.graphs()
+    # simulation.graphs()
 
 
 if __name__ == '__main__':
