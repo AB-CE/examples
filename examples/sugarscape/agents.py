@@ -16,7 +16,7 @@ def get_distance(pos_1, pos_2):
 
 class SugarPatch(Agent):
     """
-    Sugar is a FSM that
+    SugarPatch is a FSM that
     - contains an amount of sugar
     - grows 1 amount of sugar at each turn.
     """
@@ -31,7 +31,7 @@ class SugarPatch(Agent):
 
 class SpicePatch(Agent):
     """
-    Spice is a FSM that
+    SpicePatch is a FSM that
     - contains an amount of spice
     - grows 1 amount of spice at each turn.
     """
@@ -80,7 +80,7 @@ class SsAgent(Agent):
     def get_spice(self, pos):
         this_cell = self.grid.get_cell_list_contents([pos])
         for agent in this_cell:
-            if type(agent) is SpicePatch:
+            if isinstance(agent, SpicePatch):
                 return agent
 
     def get_ssagent(self, pos):
