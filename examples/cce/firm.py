@@ -126,7 +126,7 @@ class Firm(abce.Agent, abce.Firm):
         self.b = production_function[0]
         self.beta = {good: value for good, value in production_function[1].items() if value > 0}
 
-        self.set_cobb_douglas(self.group, self.b, self.beta)
+        self.cobb_douglas_function = self.create_cobb_douglas(self.group, self.b, self.beta)
         self.sales = []
         self.nx = 0
 
@@ -138,17 +138,17 @@ class Firm(abce.Agent, abce.Firm):
     def international_trade(self):
         if self.value_of_international_sales > 0:
             value = min(self.value_of_international_sales, self.possession(self.group))
-            sale = self.sell(('netexport', 0), good=self.group, quantity=value, price=self.price)
+            sale = self.make_offer(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.sales.append(sale)
         else:
             value = min(- self.value_of_international_sales, self.possession('money') / self.price)
-            self.buy(('netexport', 0), good=self.group, quantity=value, price=self.price)
+            self.make_bid(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.nx = value
 
     def invest(self):
         if self.value_of_investment > 0:
             value = min(self.value_of_investment, self.possession(self.group))
-            sale = self.sell(('netexport', 0), good=self.group, quantity=value, price=self.price)
+            sale = self.make_offer(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.sales.append(sale)
 
 
@@ -180,11 +180,11 @@ class Firm(abce.Agent, abce.Firm):
             for msg in messages:
                 quantity = msg.content / self.price * rationing
                 assert not np.isnan(quantity), (msg.content, self.price, rationing)
-                sale = self.sell(msg.sender, good=self.group, quantity=quantity, price=self.price)
+                sale = self.make_offer(msg.sender, good=self.group, quantity=quantity, price=self.price)
                 self.sales.append(sale)
         else:
             for msg in messages:
-                sale = self.sell((msg.sender_group, msg.sender_id), good=self.group, quantity=0, price=self.price)
+                sale = self.make_offer((msg.sender_group, msg.sender_id), good=self.group, quantity=0, price=self.price)
                 self.sales.append(sale)
 
     def sales_tax(self):
@@ -200,16 +200,16 @@ class Firm(abce.Agent, abce.Firm):
     def buying(self):
         """ get offers from each neighbor, accept it and update
             neighbor_prices and neighbors_goods """
-        for offers in self.get_offers_all().values():
+        for offers in self.get_all_offers().values():
             for offer in offers:
                 self.accept(offer)
-                self.goods_details.set_price(offer.good, offer.sender_id, offer.price)
+                self.goods_details.set_price(offer.good, offer.sender[1], offer.price)
 
     def production(self):
         """ produce using all goods and labor """
         input_goods = {input: self.possession(input) for input in self.beta.keys()}
         self.input_goods = copy(input_goods)
-        p = self.produce(input_goods)
+        p = self.produce(self.cobb_douglas_function, input_goods, True)
         self.produced = p[self.group]
 
     def dividends(self):

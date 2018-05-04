@@ -146,6 +146,7 @@ def main(simulation_parameters):
             household.consuming()
     except Exception as e:
         print(e)
+        raise
 
     simulation.finalize()
         # raise  # put raise for full traceback but no graphs in case of error
