@@ -6,33 +6,23 @@ this to a fixed population of 10 household. The household willingness to pay is
 household id * 10 (10, 20, 30 ... 90).
 The firms sets the prices using a PID controller.
 """
-from __future__ import division
 from firm import Firm
 from household import Household
-from abce import Simulation, gui
+from abce import Simulation
 
 
-simulation_parameters = {
-                         'random_seed': None,
-                         'rounds': 300}
+s = Simulation()
 
+firms = s.build_agents(Firm, 'firm', 10)
+households = s.build_agents(Household, 'household', 10)
 
-@gui(simulation_parameters)
-def main(simulation_parameters):
-    s = Simulation()
+for r in range(300):
+    s.advance_round(r)
+    firms.panel_log(possessions=['cookies'])
+    firms.quote()
+    households.buying()
+    firms.selling()
+    households.panel_log(possessions=['cookies'])
+    households.consumption()
+s.finalize()
 
-    firms = s.build_agents(Firm, 'firm', 10)
-    households = s.build_agents(Household, 'household', 10)
-    for r in range(int(simulation_parameters['rounds'])):
-        s.advance_round(r)
-        firms.panel_log(possessions=['cookies'])
-        firms.quote()
-        households.buying()
-        firms.selling()
-        households.panel_log(possessions=['cookies'])
-        households.consumption()
-    s.finalize()
-
-
-if __name__ == '__main__':
-    main(simulation_parameters)

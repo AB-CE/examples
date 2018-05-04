@@ -2,7 +2,6 @@ from agent import Agent
 from abce import Simulation
 
 
-
 def main():
     """ Demonstration of the simulation.advance_round function, which can
     take arbitrary values """
@@ -29,6 +28,7 @@ def main():
         agents.panel_log(possessions=['money'])
         agents.agg_log(possessions=['labor'])
     simulation.finalize()
+
 
 if __name__ == '__main__':
     main()

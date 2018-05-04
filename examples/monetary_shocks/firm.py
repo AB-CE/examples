@@ -19,16 +19,17 @@ def normalized_random(length):
     return np.array([v / sum_values for v in random_values])
 
 class Firm(abce.Agent, abce.Firm):
-    def init(self, simulation_parameters, agent_parameters):
-        self.num_firms = simulation_parameters['num_firms']
-        self.alpha = simulation_parameters['alpha']
-        self.gamma = simulation_parameters['gamma']
-        self.price_stickiness = simulation_parameters['price_stickiness']
-        self.dividends_percent = simulation_parameters['dividends_percent']
-        self.network_weight_stickiness = simulation_parameters['network_weight_stickiness']
-        self.time_of_intervention = simulation_parameters['time_of_intervention']
+    def init(self, num_firms, alpha, gamma, price_stickiness, dividends_percent, network_weight_stickiness, time_of_intervention,
+        neighbors, **trash):
+        self.num_firms = num_firms
+        self.alpha = alpha
+        self.gamma = gamma
+        self.price_stickiness = price_stickiness
+        self.dividends_percent = dividends_percent
+        self.network_weight_stickiness = network_weight_stickiness
+        self.time_of_intervention = time_of_intervention
 
-        self.neighbors = agent_parameters
+        self.neighbors = neighbors
         self.neighbors_goods = [good_from_id(idn) for idn in self.neighbors]
         self.mygood = good_from_id(self.id)
 

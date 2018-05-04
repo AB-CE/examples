@@ -1,7 +1,7 @@
 """ Agents are now build according
 to the line in agents_parameter.csv
 """
-from abce import Simulation, gui
+from abce import Simulation
 from firm import Firm
 from household import Household
 
@@ -11,11 +11,9 @@ simulation_parameters = {'name': 'name',
                          'random_seed': None,
                          'rounds': 40}
 
-#@gui(simulation_parameters)
-
 
 def main(simulation_parameters):
-    w = Simulation()
+    w = Simulation(processes=3)
     w.declare_round_endowment(resource='labor_endowment', units=5, product='labor')
     w.declare_perishable(good='labor')
 

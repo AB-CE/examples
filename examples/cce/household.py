@@ -1,22 +1,20 @@
 import abce
-from abce import NotEnoughGoods
-from pprint import pprint
-from sys import float_info
-from collections import defaultdict
+
 
 class Household(abce.Agent, abce.Household):
-    def init(self, simulation_parameters, _):
-        self.num_firms = num_firms = simulation_parameters['num_firms']
-        self.wage_stickiness = simulation_parameters['wage_stickiness']
-        money = simulation_parameters['money'] / 2
+    def init(self, num_firms, wage_stickiness, money, final_goods, consumption_functions, endowment_FFcap,
+             endowment_FFlab, **trash):
+        self.num_firms = num_firms = num_firms
+        self.wage_stickiness = wage_stickiness
+        money = money / 2
 
-        self.create('money', money )
+        self.create('money', money)
         self.utility = 0
 
-        self.final_goods = simulation_parameters['final_goods']
-        self.alpha = simulation_parameters['consumption_functions']['hoh']
-        self.create('endowment_FFcap', simulation_parameters['endowment_FFcap'])
-        self.create('endowment_FFlab', simulation_parameters['endowment_FFlab'])
+        self.final_goods = final_goods
+        self.alpha = consumption_functions['hoh']
+        self.create('endowment_FFcap', endowment_FFcap)
+        self.create('endowment_FFlab', endowment_FFlab)
 
         self.set_cobb_douglas_utility_function(self.alpha)
         self.sells = []

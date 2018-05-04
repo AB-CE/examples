@@ -4,15 +4,15 @@ from random import shuffle
 
 
 class MyAgent(Agent):
-    def init(self, simulation_parameters, agent_parameters):
+    def init(self):
         # print("m", self.id)
         pass
 
     def compute(self):
         # print('here', self.id)
-        l = list(range(1))
-        shuffle(l)
-        max(l)
+        lst = list(range(1))
+        shuffle(lst)
+        max(lst)
 
     def g(self):
         for offer in self.get_offers('cookie'):

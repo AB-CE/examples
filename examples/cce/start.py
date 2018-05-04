@@ -9,6 +9,7 @@ from sam_to_functions import Sam
 from pprint import pprint
 import iotable
 from scipy import optimize
+from tools import transform
 
 
 title = "Computational Complete Economy Model on Climate Gas Reduction"
@@ -52,6 +53,10 @@ simulation_parameters['trade_logging'] = 'group'
 @gui(simulation_parameters,
      texts=[text], title=title, names=names, truncate_rounds=50)
 def main(simulation_parameters):
+    simulation_parameters = transform(simulation_parameters)
+
+
+
     sam = Sam('climate_square.sam.csv',
               inputs=['col', 'ele', 'gas', 'o_g', 'oil', 'eis', 'trn', 'roe', 'lab', 'cap'],
               outputs=['col', 'ele', 'gas', 'o_g', 'oil', 'eis', 'trn', 'roe'],
@@ -89,27 +94,26 @@ def main(simulation_parameters):
                                   'price_stickiness': 0.5,
                                   'network_weight_stickiness': 0.5})
 
-
     simulation = Simulation(trade_logging='group', processes=1)
-
-
 
     simulation.declare_service('endowment_FFcap', 1, 'cap')
     simulation.declare_service('endowment_FFlab', 1, 'lab')
     """ every round for every endowment_FFcap the owner gets one good of lab
     similar for cap"""
 
-
-
-
     firms = {good: simulation.build_agents(Firm,
-                                     number=simulation_parameters['num_firms'],
-                                     group_name=good,
-                                     parameters=simulation_parameters)
+                                           number=simulation_parameters['num_firms'],
+                                           group_name=good,
+                                           **simulation_parameters)
              for good in sam.outputs}
-    household = simulation.build_agents(Household, 'household', simulation_parameters['num_household'], parameters=simulation_parameters)
-    netexport = simulation.build_agents(NetExport, 'netexport', 1, parameters=simulation_parameters)
-    government = simulation.build_agents(Government, 'government', 1, parameters=simulation_parameters)
+    household = simulation.build_agents(Household, 'household',
+                                        simulation_parameters['num_household'],
+                                        **simulation_parameters)
+
+    netexport = simulation.build_agents(NetExport, 'netexport', 1)
+
+    government = simulation.build_agents(Government, 'government', 1,
+                                         num_households=simulation_parameters['num_household'])
 
     firms_and_household = sum(firms.values()) + household
     all_firms = sum(firms.values())
@@ -151,6 +155,7 @@ def main(simulation_parameters):
     #simulation.graphs()
     return mean_price
 
+
 def F(money):
     prices = main(float(money))
     print("****")
@@ -158,6 +163,9 @@ def F(money):
     print('price lvl', prices)
     print("****")
     return ((1.0 - prices) ** 2) * 100000
+
+
+
 
 if __name__ == '__main__':
     main()

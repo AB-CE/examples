@@ -5,7 +5,7 @@ import abce
 
 
 class Firm(abce.Agent, abce.Firm, abce.Trade):
-    def init(self, simulation_parameters, agent_parameters):
+    def init(self):
         """ there are now 2 sectors:
         - upstream produces an intermediary good
         - downstream uses labor and the intermediary good to produce the final good

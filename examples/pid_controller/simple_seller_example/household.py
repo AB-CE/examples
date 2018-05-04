@@ -7,7 +7,7 @@ import abce
 
 
 class Household(abce.Agent, abce.Household, abce.Quote):
-    def init(self, simulation_parameters, agent_parameters):
+    def init(self):
         self.set_cobb_douglas_utility_function({'cookies': 1})
 
     def buying(self):

@@ -6,50 +6,38 @@
     timeline.
 """
 
-from abce import Simulation, gui
+from abce import Simulation
 from firm import Firm
 from household import Household
 
-parameters = {'name': '2x2',
-              'random_seed': None,
-              'rounds': 2500,
-              'num_firms': 10}
 
-#@gui(parameters)
+num_firms = 20
 
+simulation = Simulation(processes=1)
+simulation.declare_round_endowment(resource='adult',
+                                   units=1,
+                                   product='labor')
+simulation.declare_perishable(good='labor')
 
-def main(parameters):
-    simulation = Simulation(processes=1)
-    simulation.declare_round_endowment(resource='adult',
-                                       units=1,
-                                       product='labor')
-    simulation.declare_perishable(good='labor')
+firms = simulation.build_agents(Firm, 'firm', number=num_firms)
+households = simulation.build_agents(Household, 'household', number=1, num_firms=num_firms)
 
-
-    firms = simulation.build_agents(
-        Firm, 'firm', number=parameters['num_firms'])
-    households = simulation.build_agents(
-        Household, 'household', number=1, parameters=parameters)
-
-    try:
-        for rnd in range(parameters['rounds']):
-            simulation.advance_round(rnd)
-            households.sell_labor()
-            firms.buy_labor()
-            firms.production()
-            firms.panel_log(possessions=['money', 'GOOD'],
-                            variables=['price', 'inventory'])
-            firms.quotes()
-            households.buy_goods()
-            firms.sell_goods()
-            households.agg_log(possessions=['money', 'GOOD'],
-                               variables=['current_utiliy'])
-            households.consumption()
-            firms.adjust_price()
-    except Exception as e:
-        print(e)
+try:
+    for rnd in range(50):
+        simulation.advance_round(rnd)
+        households.sell_labor()
+        firms.buy_labor()
+        firms.production()
+        firms.panel_log(possessions=['money', 'GOOD'],
+                        variables=['price', 'inventory'])
+        firms.quotes()
+        households.buy_goods()
+        firms.sell_goods()
+        households.agg_log(possessions=['money', 'GOOD'],
+                           variables=['current_utiliy'])
+        households.consumption()
+        firms.adjust_price()
+finally:
     simulation.graphs()
 
 
-if __name__ == '__main__':
-    main(parameters)

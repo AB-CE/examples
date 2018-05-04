@@ -4,7 +4,7 @@ import random
 
 
 class Firm(abce.Agent, abce.Firm):
-    def init(self, simulation_parameters, agent_parameters):
+    def init(self):
         """ 1. Gets an initial amount of money
         2. create a cobb_douglas function: GOOD = 1 * labor ** 1.
         """

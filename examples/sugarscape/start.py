@@ -6,7 +6,6 @@ Heavily use Mesa for space.
 from agents import Sugar, Spice, SsAgent
 from abce import Simulation
 from mesa.space import MultiGrid
-from functools import reduce
 import pylab
 
 
@@ -30,10 +29,8 @@ def main():
         grid.place_agent(spice, (x, y))
 
     # build agents
-    agents = s.build_agents(SsAgent, 'SsAgent', 100,
-                            parameters={'grid': grid})
+    agents = s.build_agents(SsAgent, 'SsAgent', grid=grid)
 
-    prices = []
     for r in range(100):
         s.advance_round(r)
         for sugar in sugars:
@@ -46,7 +43,6 @@ def main():
 
         agents.trade()
         agents.agg_log(possessions=['sugar', 'spice'])
-
 
     s.graphs()
 

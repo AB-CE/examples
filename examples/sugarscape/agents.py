@@ -32,9 +32,9 @@ class Spice(Agent):
 
 
 class SsAgent(Agent):
-    def init(self, parameters, agent_parameters):
+    def init(self):
         self.moore = False
-        self.grid = parameters["grid"]
+        self.grid = grid
         self.set_at_random_unoccupied_pos()
         self.grid.place_agent(self, self.pos)
         self.create('sugar', random.randrange(25, 50))
@@ -150,7 +150,6 @@ class SsAgent(Agent):
             if count > 0:
                 prices = [p for p in self.prices if p]
                 self.prices = []
-                #print("%d Traded with %d out of %d neighbors" % (self.id, count, len(neighbor_agents)))
                 return prices
         return []
 
@@ -158,15 +157,18 @@ class SsAgent(Agent):
         # Epstein rule T for a pair of agents, page 105
         for offer in self.get_offers('spice'):
             baseline = self.welfare()
-            if offer.buysell == 115:
+            if offer.sell:
                 welfare = self.welfare(spice=self['spice'] + 1, sugar=self['sugar'] - 1)
-            elif offer.buysell == 98:
+            elif offer.buy:
                 welfare = self.welfare(spice=self['spice'] - 1, sugar=self['sugar'] + 1)
             if welfare > baseline:
                 try:
                     self.accept(offer)
                 except (NotEnoughGoods, KeyError):
                     self.reject(offer)
+
+        self.log('sugar', self['sugar'])
+        self.log('spice', self['spice'])
 
     def welfare(self, sugar=None, spice=None):
         if sugar is None:

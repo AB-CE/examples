@@ -4,13 +4,13 @@ import abce
 
 
 class Household(abce.Agent, abce.Household):
-    def init(self, parameters, agent_parameters):
+    def init(self, num_firms):
         """ 1. labor_endowment, which produces, because of w.declare_resource(...)
         in start.py one unit of labor per month
         2. Sets the utility function to utility = consumption of good "GOOD"
         """
         self.create('adult', 1)
-        self.num_firms = parameters['num_firms']
+        self.num_firms = num_firms
         self.alpha = alpha = 1 / self.num_firms
         cd = {"GOOD%i" % i: alpha for i in range(self.num_firms)}
         # creates {GOOD1: 1/3, GOOD2: 1/3, GOOD3: 1/3}

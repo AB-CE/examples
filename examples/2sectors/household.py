@@ -3,7 +3,7 @@ import abce
 
 
 class Household(abce.Agent, abce.Household, abce.Trade):
-    def init(self, simulation_parameters, agent_parameters):
+    def init(self):
         """ self.employer is the _number_ of the agent that receives his
         labor offer.
         """

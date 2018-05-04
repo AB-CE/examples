@@ -12,7 +12,7 @@ np.set_printoptions(suppress=True)
 
 
 class Firm(abce.Agent, abce.Firm):
-    def init(self, simulation_parameters, agent_parameters):
+    def init(self):
         self.price_controller = PiController(0.001, 0.015, positive=True)
         self.production_controller = PiController(0.001, 0.015, positive=True)
         self.price = self.price_1 = 100

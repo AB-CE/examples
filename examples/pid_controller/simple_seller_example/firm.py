@@ -8,7 +8,7 @@ from abce import NotEnoughGoods
 
 
 class Firm(abce.Agent, abce.Firm, abce.Quote):
-    def init(self, simulation_parameters, agent_parameters):
+    def init(self):
         self.error_cum = 0
         self.price = 20
 

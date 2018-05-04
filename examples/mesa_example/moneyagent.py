@@ -5,8 +5,8 @@ import random
 class MoneyAgent(abce.Agent):
     """ agents move randomly on a grid and give_money to another agent in the same cell """
 
-    def init(self, parameters, agent_parameters):
-        self.grid = parameters["grid"]
+    def init(self, grid):
+        self.grid = grid
         """ the grid on which agents live must be imported """
         x = random.randrange(self.grid.width)
         y = random.randrange(self.grid.height)
@@ -33,4 +33,4 @@ class MoneyAgent(abce.Agent):
                 pass
 
     def report_wealth(self):
-        return self.possession('money')
+        return self['money']
