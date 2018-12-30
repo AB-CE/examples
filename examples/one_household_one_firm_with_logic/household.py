@@ -1,6 +1,6 @@
 from __future__ import division  # makes division work correctly
 from builtins import range
-import abce
+import abcEconomics as abce
 
 
 class Household(abce.Agent, abce.Household):

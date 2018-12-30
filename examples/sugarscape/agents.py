@@ -1,6 +1,6 @@
 import random
 import pylab
-from abce import Agent, NotEnoughGoods
+from abcEconomics import Agent, NotEnoughGoods
 
 
 def get_distance(pos_1, pos_2):
@@ -18,7 +18,7 @@ class SugarPatch(Agent):
     """
     SugarPatch is a FSM that
     - contains an amount of sugar
-    - grows 1 amount of sugar at each turn.
+    - grows 1 amount of sugar at each turn (Epstein's rule G1).
     """
     def __init__(self, pos, max_sugar):
         self.pos = pos
@@ -33,7 +33,7 @@ class SpicePatch(Agent):
     """
     SpicePatch is a FSM that
     - contains an amount of spice
-    - grows 1 amount of spice at each turn.
+    - grows 1 amount of spice at each turn (Epstein's rule G1).
     """
     def __init__(self, pos, max_spice):
         self.pos = pos

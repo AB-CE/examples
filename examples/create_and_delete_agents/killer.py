@@ -1,5 +1,5 @@
 from __future__ import division
-import abce
+import abcEconomics as abce
 
 
 class Killer(abce.Agent, abce.Household):

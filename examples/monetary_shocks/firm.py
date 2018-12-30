@@ -2,8 +2,8 @@
 import random
 from copy import copy
 import numpy as np
-import abce
-from abce import NotEnoughGoods
+import abcEconomics as abce
+from abcEconomics import NotEnoughGoods
 from optimization_functions import optimization
 
 

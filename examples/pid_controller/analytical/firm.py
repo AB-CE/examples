@@ -3,7 +3,7 @@
 all it's goods can be sold.
 """
 from __future__ import division
-import abce
+import abcEconomics as abce
 import numpy as np
 from picontroller import PiController
 

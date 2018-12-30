@@ -5,7 +5,7 @@ from collections import OrderedDict
 import itertools
 
 import numpy as np
-import abce
+import abcEconomics as abce
 from optimization_functions import optimization
 
 def normalized_random(length):

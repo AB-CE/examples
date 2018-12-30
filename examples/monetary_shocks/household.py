@@ -1,4 +1,4 @@
-import abce
+import abcEconomics as abce
 epsilon = 1 / 10000
 
 

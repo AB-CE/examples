@@ -1,5 +1,5 @@
-import abce
-from abce import NotEnoughGoods
+import abcEconomics as abce
+from abcEconomics import NotEnoughGoods
 from pprint import pprint
 from sys import float_info
 from collections import defaultdict

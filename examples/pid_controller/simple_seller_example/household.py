@@ -3,7 +3,7 @@ pay. The willingness to pay is self.id * 10. Which results in a downward
 sloping demand curve
 """
 from __future__ import division
-import abce
+import abcEconomics as abce
 
 
 class Household(abce.Agent, abce.Household, abce.Quote):

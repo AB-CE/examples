@@ -1,4 +1,4 @@
-import abce
+import abcEconomics as abce
 from ball import Ball
 from killer import Killer
 from victim import Victim

@@ -1,5 +1,5 @@
 from __future__ import division  # makes division work correctly
-import abce
+import abcEconomics as abce
 import random
 
 

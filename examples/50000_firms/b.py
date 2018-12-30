@@ -25,7 +25,7 @@ This is a minimal template for a start.py::
 
     from __future__ import division  # makes / division work correct in python !
     from agent import Agent
-    from abce import *
+    from abcEconomics import *
 
 
     simulation = Simulation(rounds=1000, name='sim')
@@ -49,8 +49,8 @@ import os
 import time
 import multiprocessing as mp
 from multiprocessing.managers import BaseManager
-import abce.db
-import abce.abcelogger
+import abcEconomics as abce.db
+import abcEconomics as abce.abcelogger
 from . import postprocess
 from glob import glob
 from .firmmultitechnologies import *
@@ -62,7 +62,7 @@ from .firm import Firm
 from .quote import Quote
 from .contracting import Contracting
 import json
-from . import abcegui
+from . import abcEconomics as abcegui
 from .family import Family
 from .abcegui import gui
 import random

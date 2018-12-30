@@ -8,7 +8,7 @@ https://github.com/projectmesa/mesa/tree/master/examples/boltzmann_wealth_model.
 For further reading, see
 [Dragulescu, A and Yakovenko, V. Statistical Mechanics of Money, Income, and Wealth: A Short Survey. November, 2002](http://arxiv.org/pdf/cond-mat/0211175v1.pdf)
 """
-import abce
+import abcEconomics as abce
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 from moneyagent import MoneyAgent

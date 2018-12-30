@@ -1,5 +1,5 @@
 #pylint: disable=W0201
-import abce
+import abcEconomics as abce
 
 
 class Government(abce.Agent):

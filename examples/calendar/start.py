@@ -1,5 +1,5 @@
 from agent import Agent
-from abce import Simulation
+from abcEconomics import Simulation
 
 
 def main():

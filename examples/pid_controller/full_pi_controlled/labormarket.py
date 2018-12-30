@@ -2,7 +2,7 @@
 has the demand function q = 102 - p
 """
 from __future__ import division
-import abce
+import abcEconomics as abce
 
 
 class LaborMarket(abce.Agent, abce.Household, abce.Quote):

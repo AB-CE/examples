@@ -2,7 +2,7 @@ from firm import Firm
 from household import Household
 from netexport import NetExport
 from government import Government
-from abce import Simulation, gui
+from abcEconomics import Simulation, gui
 from collections import OrderedDict, defaultdict
 from sam_to_functions import Sam
 import iotable

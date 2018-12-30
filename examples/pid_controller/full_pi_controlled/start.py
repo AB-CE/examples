@@ -10,7 +10,7 @@ from __future__ import division
 from firm import Firm
 from market import Market
 from labormarket import LaborMarket
-from abce import Simulation
+from abcEconomics import Simulation
 
 
 def main():

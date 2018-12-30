@@ -2,7 +2,7 @@
 """ This firm uses a pi controller to set t
 """
 from __future__ import division
-import abce
+import abcEconomics as abce
 import numpy as np
 np.set_printoptions(suppress=True)
 from picontroller import PiController

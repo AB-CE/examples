@@ -10,7 +10,7 @@ from __future__ import division
 from multiprocessing import freeze_support
 from firm import Firm
 from market import Market
-from abce import Simulation, gui
+from abcEconomics import Simulation, gui
 
 
 simulation_parameters = {'name': "analytical",

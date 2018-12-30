@@ -1,4 +1,4 @@
-import abce
+import abcEconomics as abce
 
 
 class NetExport(abce.Agent):

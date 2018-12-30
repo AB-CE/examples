@@ -1,7 +1,7 @@
 from firm import Firm
 from household import Household
 from centralbank import CentralBank
-from abce import Simulation
+from abcEconomics import Simulation
 from random import shuffle
 import networkx
 from random import randrange

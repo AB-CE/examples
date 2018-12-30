@@ -6,7 +6,7 @@
     timeline.
 """
 
-from abce import Simulation, gui
+from abcEconomics import Simulation, gui
 from firm import Firm
 from household import Household
 

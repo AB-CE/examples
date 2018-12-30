@@ -7,7 +7,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 from agents import SugarPatch, SpicePatch, SsAgent
-from abce import Simulation
+from abcEconomics import Simulation
 from mesa.space import MultiGrid
 import pylab
 

@@ -1,7 +1,4 @@
-""" Agents are now build according
-to the line in agents_parameter.csv
-"""
-from abce import Simulation, gui
+from abcEconomics import Simulation
 from firm import Firm
 from household import Household
 
@@ -10,9 +7,6 @@ simulation_parameters = {'name': 'name',
                          'trade_logging': 'off',
                          'random_seed': None,
                          'rounds': 10}
-
-#@gui(simulation_parameters)
-
 
 def main(simulation_parameters):
     w = Simulation()
