@@ -12,10 +12,10 @@ class NetExport(abce.Agent):
         for os in offers_grouped:
             offers.extend(os)
         demand = sum([offer.quantity * offer.price for offer in offers if offer.sell])
-        if demand < self.possession('money'):
+        if demand < self['money']:
             self.rationing = rationing = 1
         else:
-            self.rationing = rationing = self.possession('money') / demand
+            self.rationing = rationing = self['money'] / demand
 
         for offer in offers:
             if not offer.sell:
@@ -24,6 +24,6 @@ class NetExport(abce.Agent):
             else:
                 self.accept(offer, offer.quantity * rationing)
 
-        self.give(('household', 0), quantity=self.possession('money'), good='money')
+        self.give(('household', 0), quantity=self['money'], good='money')
 
 

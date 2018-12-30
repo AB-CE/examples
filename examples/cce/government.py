@@ -6,7 +6,7 @@ class Government(abce.Agent):
         self.num_households = num_households
 
     def taxes_to_household(self):
-        self.money = self.possession('money')
+        self.money = self['money']
         share = self.money / self.num_households
         for i in range(self.num_households):
             self.give(('household', i), good='money', quantity=share)

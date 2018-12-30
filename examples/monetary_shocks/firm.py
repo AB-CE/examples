@@ -13,14 +13,16 @@ epsilon = 1 / 10000
 def good_from_id(idn):
     return  'g%i' % idn
 
+
 def normalized_random(length):
     random_values = [random.uniform(0.1, 0.9) for _ in range(length)]
     sum_values = sum(random_values)
     return np.array([v / sum_values for v in random_values])
 
+
 class Firm(abce.Agent, abce.Firm):
-    def init(self, num_firms, alpha, gamma, price_stickiness, dividends_percent, network_weight_stickiness, time_of_intervention,
-        neighbors, **trash):
+    def init(self, num_firms, alpha, gamma, price_stickiness, dividends_percent,
+        network_weight_stickiness, time_of_intervention, neighbors, **trash):
         self.num_firms = num_firms
         self.alpha = alpha
         self.gamma = gamma
@@ -30,10 +32,11 @@ class Firm(abce.Agent, abce.Firm):
         self.time_of_intervention = time_of_intervention
 
         self.neighbors = neighbors
+        print(neighbors)
         self.neighbors_goods = [good_from_id(idn) for idn in self.neighbors]
         self.mygood = good_from_id(self.id)
 
-        prices = np.array([1.0 for _ in  range(len(self.neighbors) + 1)], dtype=float)
+        prices = np.array([1.0 for _ in range(len(self.neighbors) + 1)], dtype=float)
         self.neighbor_prices = prices[:-1]
         self.wage = prices[-1]
 
@@ -80,7 +83,7 @@ class Firm(abce.Agent, abce.Firm):
         """
         messages = self.get_messages('nominal_demand')
         nominal_demand = [msg.content for msg in messages]
-        assert self.not_reserved(self.mygood) > 0
+        assert self.not_reserved(self.mygood) >= 0
         market_clearing_price = sum(nominal_demand) / self.not_reserved(self.mygood)
         self.price = (1 - self.price_stickiness) * market_clearing_price + self.price_stickiness * self.price
         demand = sum([msg.content / self.price for msg in messages])
@@ -90,18 +93,18 @@ class Firm(abce.Agent, abce.Firm):
             self.rationing = rationing = self.not_reserved(self.mygood) / demand - epsilon
 
         for msg in messages:
-            self.sell(msg.sender, good=self.mygood, quantity=msg.content / self.price * rationing, price=self.price)
+            self.make_offer(msg.sender, good=self.mygood, quantity=msg.content / self.price * rationing, price=self.price)
 
     def buying(self):
         """ get offers from each neighbor, accept it and update
             neighbor_prices and neighbors_goods """
-        for offers in self.get_offers_all().values():
+        for offers in self.get_all_offers().values():
             for offer in offers:
                 self.accept(offer)
                 if offer.good == 'labor':
                     self.wage = offer.price
                 else:
-                    index = self.neighbors.index(offer.sender_id)
+                    index = self.neighbors.index(offer.sender[1])
                     self.neighbor_prices[index] = offer.price
                     self.neighbors_goods[index] = offer.good
 

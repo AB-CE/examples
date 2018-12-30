@@ -4,11 +4,8 @@ from netexport import NetExport
 from government import Government
 from abce import Simulation, gui
 from collections import OrderedDict, defaultdict
-import os
 from sam_to_functions import Sam
-from pprint import pprint
 import iotable
-from scipy import optimize
 from tools import transform
 
 

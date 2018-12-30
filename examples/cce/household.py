@@ -16,14 +16,14 @@ class Household(abce.Agent, abce.Household):
         self.create('endowment_FFcap', endowment_FFcap)
         self.create('endowment_FFlab', endowment_FFlab)
 
-        self.set_cobb_douglas_utility_function(self.alpha)
+        self.cobb_douglas_utility_function = self.create_cobb_douglas_utility_function(self.alpha)
         self.sells = []
         self.welfare = 0
 
     def send_demand(self):
         for final_good in self.final_goods:
             for i in range(self.num_firms):
-                demand = self.alpha[final_good] / self.num_firms * self.possession("money")
+                demand = self.alpha[final_good] / self.num_firms * self["money"]
                 if demand > 0:
                     self.send((final_good, i), final_good, demand)
 
@@ -37,18 +37,18 @@ class Household(abce.Agent, abce.Household):
         messages = self.get_messages_all()
         for capital_type, ct_messages in messages.items():
             nominal_demand = [msg.content for msg in ct_messages]
-            market_clearing_price = sum(nominal_demand) / self.possession(capital_type)
+            market_clearing_price = sum(nominal_demand) / self[capital_type]
             if self.round > 5:
                 self.price = price = (1 - self.wage_stickiness) * market_clearing_price + self.wage_stickiness * self.price
             else:
                 self.price = price = market_clearing_price
             demand = sum([msg.content / price for msg in ct_messages])
-            if demand < self.possession(capital_type):
+            if demand < self[capital_type]:
                 self.rationing = rationing = 1
             else:
-                self.rationing = rationing = self.possession(capital_type) / demand
+                self.rationing = rationing = self[capital_type] / demand
             for msg in ct_messages:
-                sell = self.sell(msg.sender,
+                sell = self.make_offer(msg.sender,
                                  good=capital_type,
                                  quantity=msg.content / price * rationing,
                                  price=price)
@@ -60,12 +60,12 @@ class Household(abce.Agent, abce.Household):
                 self.accept(offer)
 
     def money_to_nx(self):
-        self.give(('netexport', 0), quantity=self.possession('money'), good='money')
+        self.give(('netexport', 0), quantity=self['money'], good='money')
 
     def sales_accounting(self):
         self.sales_earning = sum([sell.final_quantity * sell.price for sell in self.sells])
         self.sells = []
 
     def consuming(self):
-        self.welfare = self.consume_everything()
+        self.welfare = self.consume(self.cobb_douglas_utility_function, {good: self[good] for good in self.final_goods})
 

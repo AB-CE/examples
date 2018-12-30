@@ -3,10 +3,10 @@ epsilon = 1 / 10000
 
 
 class Household(abce.Agent, abce.Household):
-    def init(self, simulation_parameters, agent_parameters):
-        self.num_firms = num_firms = simulation_parameters['num_firms']
-        self.wage_stickiness = simulation_parameters['wage_stickiness']
-        self.set_cobb_douglas_utility_function({'g%i' % i: 1 / num_firms for i in range(num_firms)})
+    def init(self, num_firms, wage_stickiness, **_):
+        self.num_firms = num_firms
+        self.wage_stickiness = wage_stickiness
+        self.uf = self.create_cobb_douglas_utility_function({'g%i' % i: 1 / num_firms for i in range(num_firms)})
         self.create('money', 1)
         self.create('labor_endowment', 1)
         self.utility = 0
@@ -25,6 +25,7 @@ class Household(abce.Agent, abce.Household):
         """
         messages = self.get_messages('nominal_demand')
         nominal_demand = [msg.content for msg in messages]
+        assert self.not_reserved('labor') >= 0, self.not_reserved('labor')
         market_clearing_price = sum(nominal_demand) / self.not_reserved('labor')
         self.wage = (1 - self.wage_stickiness) * market_clearing_price + self.wage_stickiness * self.wage
         demand = sum([msg.content / self.wage for msg in messages])
@@ -34,7 +35,7 @@ class Household(abce.Agent, abce.Household):
             self.rationing = rationing = max(0, self.not_reserved('labor') / demand - epsilon)
 
         for msg in messages:
-            self.sell(msg.sender,  good='labor', quantity=msg.content / self.wage * rationing, price=self.wage)
+            self.make_offer(msg.sender,  good='labor', quantity=msg.content / self.wage * rationing, price=self.wage)
 
     def buying(self):
         for neighbor in range(self.num_firms):
@@ -42,4 +43,4 @@ class Household(abce.Agent, abce.Household):
                 self.accept(offer)
 
     def consuming(self):
-        self.utility = self.consume_everything()
+        self.utility = self.consume(self.uf, {good: self[good] for good in self.possessions() if good not in ['money', 'labor']})

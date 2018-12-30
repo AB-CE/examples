@@ -44,10 +44,10 @@ def main():
 
     network = create_network(simulation_parameters['num_firms'])
     network = [network.neighbors(neighbor) for neighbor in range(simulation_parameters['num_firms'])]
-    firms = s.build_agents(Firm, 'firm', parameters=simulation_parameters,
-                           agent_parameters=[n for n in network])
-    household = s.build_agents(Household, 'household', 1, parameters=simulation_parameters)
-    centralbank = s.build_agents(CentralBank, 'centralbank', 1, parameters=simulation_parameters)
+    firms = s.build_agents(Firm, 'firm', **simulation_parameters,
+                           agent_parameters=[{'neighbors': list(n)} for n in network])
+    household = s.build_agents(Household, 'household', 1, **simulation_parameters)
+    centralbank = s.build_agents(CentralBank, 'centralbank', 1, **simulation_parameters)
 
     for rnd in range(simulation_parameters['rounds']):
         s.advance_round(rnd)
@@ -60,9 +60,9 @@ def main():
         firms.change_weights()
         firms.stats()
         centralbank.intervention()
-        household.agg_log(possessions=['money'],
+        household.agg_log(goods=['money'],
                           variables=['utility', 'rationing'])
-        firms.agg_log(possessions=['money'],
+        firms.agg_log(goods=['money'],
                       variables=['produced', 'profit', 'price', 'dead', 'inventory', 'rationing'])
     s.graphs()
 

@@ -1,16 +1,12 @@
 import abce
 import random
-import numpy as np
-from optimization_functions import optimization
-from copy import copy
-from collections import defaultdict
 
 
 class CentralBank(abce.Agent):
-    def init(self, simulation_parameters, _):
-        self.time_of_intervention = simulation_parameters['time_of_intervention']
-        self.percentage_injection = simulation_parameters['percentage_injection']
-        self.percentage_beneficiaries = simulation_parameters['percentage_beneficiaries']
+    def init(self, time_of_intervention, percentage_injection, percentage_beneficiaries, **_):
+        self.time_of_intervention = time_of_intervention
+        self.percentage_injection = percentage_injection
+        self.percentage_beneficiaries = percentage_beneficiaries
 
     def intervention(self):
         if self.round == self.time_of_intervention:

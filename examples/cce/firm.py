@@ -6,13 +6,14 @@ import numpy as np
 from optimization_functions import optimization
 from copy import copy
 from collections import OrderedDict
-from pprint import pprint
 import itertools
+
 
 def normalized_random(length):
     random_values = [random.uniform(0.1, 0.9) for _ in range(length)]
     sum_values = sum(random_values)
     return np.array([v / sum_values for v in random_values])
+
 
 class GoodDetails:
     def __init__(self, betas, capital_types, num_firms):
@@ -118,7 +119,7 @@ class Firm(abce.Agent, abce.Firm):
         self.create(self.group, sam.column_sum[self.group])
         # initial endowment of own good and price must be consistent (=the same)
         self.create('money', money)
-        self.money_1 = self.possession('money')
+        self.money_1 = self['money']
 
         self.price = 1
         self.profit = 0
@@ -137,17 +138,17 @@ class Firm(abce.Agent, abce.Firm):
 
     def international_trade(self):
         if self.value_of_international_sales > 0:
-            value = min(self.value_of_international_sales, self.possession(self.group))
+            value = min(self.value_of_international_sales, self[self.group])
             sale = self.make_offer(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.sales.append(sale)
         else:
-            value = min(- self.value_of_international_sales, self.possession('money') / self.price)
+            value = min(- self.value_of_international_sales, self['money'] / self.price)
             self.make_bid(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.nx = value
 
     def invest(self):
         if self.value_of_investment > 0:
-            value = min(self.value_of_investment, self.possession(self.group))
+            value = min(self.value_of_investment, self[self.group])
             sale = self.make_offer(('netexport', 0), good=self.group, quantity=value, price=self.price)
             self.sales.append(sale)
 
@@ -157,7 +158,7 @@ class Firm(abce.Agent, abce.Firm):
         for entity, id, good, _, weight in self.goods_details:
             self.send((entity, id),
                          good,
-                         weight * self.possession('money'))
+                         weight * self['money'])
 
     def selling(self):
         """ receive demand from neighbors and consumer;
@@ -168,14 +169,14 @@ class Firm(abce.Agent, abce.Firm):
         messages = self.get_messages(self.group)
         nominal_demand = [msg.content for msg in messages]
         self.nominal_demand = sum(nominal_demand)
-        if self.possession(self.group) > 0:
-            market_clearing_price = (sum(nominal_demand) / self.possession(self.group) )
+        if self[self.group] > 0:
+            market_clearing_price = (sum(nominal_demand) / self[self.group] )
             self.price = (1 - self.price_stickiness) * market_clearing_price + self.price_stickiness * self.price
             demand = sum([msg.content / self.price for msg in messages])
-            if demand < self.possession(self.group):
+            if demand < self[self.group]:
                 self.rationing = rationing = 1
             else:
-                self.rationing = rationing = max(0, self.possession(self.group) / demand)
+                self.rationing = rationing = max(0, self[self.group] / demand)
 
             for msg in messages:
                 quantity = msg.content / self.price * rationing
@@ -190,12 +191,12 @@ class Firm(abce.Agent, abce.Firm):
     def sales_tax(self):
         total_sales_quantity = sum([sale.final_quantity for sale in self.sales]) - self.nx
         tax = (total_sales_quantity * self.price) * self.output_tax_share
-        self.give(('government', 0), good='money', quantity=min(self.possession('money'), tax))
+        self.give(('government', 0), good='money', quantity=min(self['money'], tax))
         self.sales = []
 
     def carbon_taxes(self):
         carbon_tax = self.produced * self.carbon_prod * self.carbon_tax  * (1 - self.output_tax_share)
-        self.give(('government', 0), good='money', quantity=min(self.possession('money'), carbon_tax))
+        self.give(('government', 0), good='money', quantity=min(self['money'], carbon_tax))
 
     def buying(self):
         """ get offers from each neighbor, accept it and update
@@ -207,17 +208,17 @@ class Firm(abce.Agent, abce.Firm):
 
     def production(self):
         """ produce using all goods and labor """
-        input_goods = {input: self.possession(input) for input in self.beta.keys()}
+        input_goods = {input: self[input] for input in self.beta.keys()}
         self.input_goods = copy(input_goods)
         p = self.produce(self.cobb_douglas_function, input_goods, True)
         self.produced = p[self.group]
 
     def dividends(self):
         """ pay dividends to household if profit is positive, calculate profits """
-        self.profit = self.possession('money') - self.money_1
+        self.profit = self['money'] - self.money_1
         earnings = max(0, self.profit)
         self.give(('household', 0), good='money', quantity=self.dividends_percent * earnings)
-        self.money_1 = self.possession('money')
+        self.money_1 = self['money']
 
     def change_weights(self):
         opt = optimization(seed_weights=self.seed_weights,
