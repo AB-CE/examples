@@ -6,7 +6,7 @@ import abcEconomics as abce
 
 
 class Market(abce.Agent, abce.Household):
-    def init(self, simulation_parameters, agent_parameters):
+    def init(self):
         self.set_cobb_douglas_utility_function({'cookies': 1})
 
     def buying(self):

@@ -1,6 +1,3 @@
-from __future__ import division
-from __future__ import print_function
-from builtins import range
 import abcEconomics as abce
 
 

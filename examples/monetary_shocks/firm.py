@@ -19,24 +19,26 @@ def normalized_random(length):
     return np.array([v / sum_values for v in random_values])
 
 class Firm(abce.Agent, abce.Firm):
-    def init(self, simulation_parameters, agent_parameters):
-        self.num_firms = simulation_parameters['num_firms']
-        self.alpha = simulation_parameters['alpha']
-        self.gamma = simulation_parameters['gamma']
-        self.price_stickiness = simulation_parameters['price_stickiness']
-        self.dividends_percent = simulation_parameters['dividends_percent']
-        self.network_weight_stickiness = simulation_parameters['network_weight_stickiness']
-        self.time_of_intervention = simulation_parameters['time_of_intervention']
+    def init(self, num_firms, alpha, gamma, price_stickiness, dividends_percent, network_weight_stickiness, time_of_intervention,
+        neighbors, **trash):
+        self.num_firms = num_firms
+        self.alpha = alpha
+        self.gamma = gamma
+        self.price_stickiness = price_stickiness
+        self.dividends_percent = dividends_percent
+        self.network_weight_stickiness = network_weight_stickiness
+        self.time_of_intervention = time_of_intervention
 
-        self.neighbors = agent_parameters
+        self.neighbors = neighbors
         self.neighbors_goods = [good_from_id(idn) for idn in self.neighbors]
         self.mygood = good_from_id(self.id)
-
-        prices = np.array([1.0 for _ in range(len(self.neighbors) + 1)], dtype=float)
+        prices = [1.0 for _ in self.neighbors]
+        prices.append(1.0)
+        prices =  np.array(prices, dtype=float)
         self.neighbor_prices = prices[:-1]
         self.wage = prices[-1]
 
-        weigth_and_labor_weight = normalized_random(len(self.neighbors) + 1)
+        weigth_and_labor_weight = normalized_random(len(prices))
         self.seed_weights = weigth_and_labor_weight
         self.weights = weigth_and_labor_weight[:-1]
         self.labor_weight = weigth_and_labor_weight[-1]
@@ -48,6 +50,7 @@ class Firm(abce.Agent, abce.Firm):
         self.price = 1
         self.profit = 0
         self.profit_1 = 0
+        self.labor_endowment = 0
 
     def produce(self, input_goods):
         """ Produce according to CES production function """
@@ -67,9 +70,9 @@ class Firm(abce.Agent, abce.Firm):
     def send_demand(self):
         """ send nominal demand, according to weights to neighbor """
         for neighbor, weight in zip(self.neighbors, self.weights):
-            self.send(('firm', neighbor), 'nominal_demand', weight * self.not_reserved("money"))
+            self.send_envelope(('firm', neighbor), 'nominal_demand', weight * self.not_reserved("money"))
 
-        self.send(('household', 0), 'nominal_demand', self.labor_weight * self.not_reserved('money'))
+        self.send_envelope(('household', 0), 'nominal_demand', self.labor_weight * self.not_reserved('money'))
 
     def selling(self):
         """ receive demand from neighbors and consumer;
@@ -79,9 +82,11 @@ class Firm(abce.Agent, abce.Firm):
         """
         messages = self.get_messages('nominal_demand')
         nominal_demand = [msg.content for msg in messages]
+        assert sum(nominal_demand) > 0
         assert self.not_reserved(self.mygood) > 0
         market_clearing_price = sum(nominal_demand) / self.not_reserved(self.mygood)
         self.price = (1 - self.price_stickiness) * market_clearing_price + self.price_stickiness * self.price
+        print(messages[0].content)
         demand = sum([msg.content / self.price for msg in messages])
         if demand <= self.not_reserved(self.mygood):
             self.rationing = rationing = 1 - epsilon
@@ -160,5 +165,5 @@ class Firm(abce.Agent, abce.Firm):
         else:
             self.dead = 1
         self.inventory = self.not_reserved(self.mygood)
-        if self.round == self.time_of_intervention:
-            self.send(('centralbank', 0), 'grant', {'money': self.not_reserved('money')})
+        if self.time == self.time_of_intervention:
+            self.send_envelope(('centralbank', 0), 'grant', {'money': self.not_reserved('money')})

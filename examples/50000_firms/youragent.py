@@ -1,20 +1,18 @@
-from abce.agent import Agent
+from abcEconomics.agent import Agent
 from random import shuffle, randint
 
 
 class YourAgent(Agent):
-    def init(self, simulation_parameters, agent_parameters):
-        #print("y", self.id)
+    def init(self):
         pass
 
     def compute(self):
-        #print('here', self.id)
-        l = list(range(1))
-        shuffle(l)
-        max(l)
+        lst = list(range(1))
+        shuffle(lst)
+        max(lst)
 
     def s(self):
         self.create('cookie', 1)
         self.sell(('myagent', randint(0, self.id)),
                   good='cookie', price=0, quantity=1)
-        assert self['cookie'] == 0
+        assert self['cookie'] == 1

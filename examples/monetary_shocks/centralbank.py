@@ -4,13 +4,13 @@ from optimization_functions import optimization
 
 
 class CentralBank(abce.Agent):
-    def init(self, simulation_parameters, _):
-        self.time_of_intervention = simulation_parameters['time_of_intervention']
-        self.percentage_injection = simulation_parameters['percentage_injection']
-        self.percentage_beneficiaries = simulation_parameters['percentage_beneficiaries']
+    def init(self, time_of_intervention, percentage_injection, percentage_beneficiaries):
+        self.time_of_intervention = time_of_intervention
+        self.percentage_injection = percentage_injection
+        self.percentage_beneficiaries = percentage_beneficiaries
 
     def intervention(self):
-        if self.round == self.time_of_intervention:
+        if self.time == self.time_of_intervention:
             print('intervention', self.percentage_injection)
             messages = self.get_messages('grant')
             money_in_the_economy = sum([msg.content['money'] for msg in messages])

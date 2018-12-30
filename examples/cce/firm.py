@@ -86,26 +86,27 @@ class GoodDetails:
 
 
 class Firm(abce.Agent, abce.Firm):
-    def init(self, simulation_parameters, _):
-        self.num_firms = simulation_parameters['num_firms']
-        self.price_stickiness = simulation_parameters['price_stickiness']
-        self.dividends_percent = simulation_parameters['dividends_percent']
-        self.network_weight_stickiness = simulation_parameters['network_weight_stickiness']
-        self.capital_types = simulation_parameters['capital_types']
-        self.output_tax_share = simulation_parameters['output_tax_shares'][self.group]
-        production_function = simulation_parameters['production_functions'][self.group]
-        money = simulation_parameters['money'] / 2 / (self.num_firms * len(simulation_parameters['outputs']))
+    def init(self, num_firms, price_stickiness, network_weight_stickiness, dividends_percent, capital_types,
+             output_tax_shares, production_functions, outputs, money, sam, tax_change_time, carbon_prod, carbon_tax,
+             tax, **trash):
+        self.num_firms = num_firms
+        self.price_stickiness = price_stickiness
+        self.dividends_percent = dividends_percent
+        self.network_weight_stickiness = network_weight_stickiness
+        self.capital_types = capital_types
+        self.output_tax_share = output_tax_shares[self.group]
+        production_function = production_functions[self.group]
+        money = money / 2 / (self.num_firms * len(outputs))
         betas = production_function[1]
-        sam = simulation_parameters['sam']
         self.sbtax = sam.entries['tax'][self.group]
         self.value_of_international_sales = sam.endowment_vector('nx')[self.group]
         self.value_of_investment = sam.endowment_vector('inv')[self.group]
-        self.tax_change_time = simulation_parameters['tax_change_time']
-        self.carbon_prod = simulation_parameters['carbon_prod'][self.group] / (sam.column_sum[self.group] - sam.entries[self.group]['nx'])
-        self.carbon_tax_after = simulation_parameters['carbon_tax'] * 12 / 44
+        self.tax_change_time = tax_change_time
+        self.carbon_prod = carbon_prod[self.group] / (sam.column_sum[self.group] - sam.entries[self.group]['nx'])
+        self.carbon_tax_after = carbon_tax * 12 / 44
         self.carbon_tax = 0
 
-        self.after_policy_change_output_tax_share = simulation_parameters['tax_' + self.group] / 100
+        self.after_policy_change_output_tax_share = tax[self.group] / 100
 
         self.goods_details = GoodDetails(betas, self.capital_types, self.num_firms)
         self.goods_details.set_prices_from_list(normalized_random(len(self.goods_details)))
@@ -113,7 +114,8 @@ class Firm(abce.Agent, abce.Firm):
         self.seed_weights = normalized_random(self.goods_details.num_goods())
         self.goods_details.set_weights_from_full_list(normalized_random(len(self.goods_details)))
 
-        self.create(self.group, sam.column_sum[self.group])   # initial endowment of own good and price must be consistent (=the same)
+        self.create(self.group, sam.column_sum[self.group])
+        # initial endowment of own good and price must be consistent (=the same)
         self.create('money', money)
         self.money_1 = self.possession('money')
 

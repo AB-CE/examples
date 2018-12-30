@@ -1,7 +1,6 @@
 from agent import Agent
 from abcEconomics import Simulation
 
-
 def main():
     """ Demonstration of the simulation.advance_round function, which can
     take arbitrary values """

@@ -2,7 +2,7 @@ import abcEconomics as abce
 
 
 class NetExport(abce.Agent):
-    def init(self, _, __):
+    def init(self):
         self.create('money', 0)
 
     def invest(self):

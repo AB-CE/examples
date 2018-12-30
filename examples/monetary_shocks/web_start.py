@@ -40,8 +40,6 @@ def main(simulation_parameters):
 
     s = Simulation(name=simulation_parameters['name'])
 
-    s.declare_service('labor_endowment', 1, 'labor')
-
     network = create_network(simulation_parameters['num_firms'])
     network = [network.neighbors(neighbor) for neighbor in range(simulation_parameters['num_firms'])]
     firms = s.build_agents(Firm, 'firm', parameters=simulation_parameters,
@@ -64,6 +62,8 @@ def main(simulation_parameters):
                           variables=['utility', 'rationing'])
         firms.agg_log(possessions=['money'],
                       variables=['produced', 'profit', 'price', 'dead', 'inventory', 'rationing'])
+    
+        (household + firms).refresh_services('labor', 'labor_endowment', units=1)
     s.finalize()
 
 if __name__ == '__main__':

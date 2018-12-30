@@ -3,18 +3,18 @@ epsilon = 1 / 10000
 
 
 class Household(abce.Agent, abce.Household):
-    def init(self, simulation_parameters, agent_parameters):
-        self.num_firms = num_firms = simulation_parameters['num_firms']
-        self.wage_stickiness = simulation_parameters['wage_stickiness']
-        self.set_cobb_douglas_utility_function({'g%i' % i: 1 / num_firms for i in range(num_firms)})
+    def init(self, num_firms, wage_stickiness):
+        self.num_firms = num_firms
+        self.wage_stickiness = wage_stickiness
+        self.cdf = self.create_cobb_douglas_utility_function({'g%i' % i: 1 / num_firms for i in range(num_firms)})
         self.create('money', 1)
-        self.create('labor_endowment', 1)
+        self.labor_endowment = 1
         self.utility = 0
         self.wage = 0.5
 
     def send_demand(self):
         for i in range(self.num_firms):
-            self.send(('firm', i), 'nominal_demand', 1 / self.num_firms * self.not_reserved("money"))
+            self.send_envelope(('firm', i), 'nominal_demand', 1 / self.num_firms * self.not_reserved("money"))
 
     def selling(self):
         """ receive demand from neighbors and consumer;
@@ -41,4 +41,4 @@ class Household(abce.Agent, abce.Household):
                 self.accept(offer)
 
     def consuming(self):
-        self.utility = self.consume_everything()
+        self.utility = self.consume(self.cdf, self.possessions())

@@ -18,7 +18,7 @@ def compute_gini(model):
     """ calculates the index of wealth distribution form a list of numbers """
     agent_wealths = model.wealths
     x = sorted(agent_wealths)
-    N = len(agent_wealths)
+    N = len(x)
     B = sum(xi * (N - i) for i, xi in enumerate(x)) / (N * sum(x))
     return 1 + (1 / N) - 2 * B
 
@@ -35,7 +35,7 @@ class MoneyModel(abce.Simulation):  # The actual simulation must inherit from Si
         # single processing
         self.grid = MultiGrid(x_size, y_size, True)
         self.agents = self.build_agents(MoneyAgent, 'MoneyAgent', num_agents,
-                                        parameters={'grid': self.grid})
+                                        grid=self.grid)
         # ABCE agents must inherit the MESA grid
         self.running = True
         # MESA requires this
@@ -51,9 +51,9 @@ class MoneyModel(abce.Simulation):  # The actual simulation must inherit from Si
         """ In every step the agent's methods are executed, every set the round
         counter needs to be increased by self.next_round() """
         self.advance_round(self.r)
-        self.agents.do('move')
-        self.agents.do('give_money')
-        self.wealths = self.agents.do('report_wealth')
+        self.agents.move()
+        self.agents.give_money()
+        self.wealths = self.agents.report_wealth()
         # agents report there wealth in a list self.wealth
         self.datacollector.collect(self)
         # collects the data
