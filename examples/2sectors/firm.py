@@ -4,8 +4,8 @@ from builtins import range
 import abcEconomics as abce
 
 
-class Firm(abce.Agent, abce.Firm, abce.Trade):
-    def init(self, simulation_parameters, agent_parameters):
+class Firm(abce.Agent, abce.Firm):
+    def init(self):
         """ there are now 2 sectors:
         - upstream produces an intermediary good
         - downstream uses labor and the intermediary good to produce the final good
@@ -28,7 +28,7 @@ class Firm(abce.Agent, abce.Firm, abce.Trade):
             self.output = "consumption_good"
             self.outquatity = 2
             self.price['consumption_good'] = 1
-        self.set_cobb_douglas(self.output, self.outquatity, self.inputs)
+        self.pf = self.create_cobb_douglas(self.output, self.outquatity, self.inputs)
 
     def buy_inputs(self):
         oo = self.get_offers("labor")
@@ -39,7 +39,7 @@ class Firm(abce.Agent, abce.Firm, abce.Trade):
             self.accept(offer)
 
     def production(self):
-        self.produce(self.inputs)
+        self.produce(self.pf, self.inputs)
 
     def sell_intermediary_goods(self):
         if self.output == 'intermediate_good':

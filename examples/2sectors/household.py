@@ -2,15 +2,16 @@ from __future__ import division
 import abcEconomics as abce
 
 
-class Household(abce.Agent, abce.Household, abce.Trade):
-    def init(self, simulation_parameters, agent_parameters):
+class Household(abce.Agent, abce.Household):
+    def init(self):
         """ self.employer is the _number_ of the agent that receives his
         labor offer.
         """
-        self.create('labor_endowment', 1)
-        self.set_cobb_douglas_utility_function({"consumption_good": 1})
+        self.labor_endowment = 1
+        self.utility_function = self.create_cobb_douglas_utility_function({"consumption_good": 1})
         self.accumulated_utility = 0
         self.employer = self.id
+        self._inventory._perishable.append('labor')  # TODO simplify this
 
     def sell_labor(self):
         """ offers one unit of labor to firm self.employer, for the price of 1 "money" """
@@ -24,6 +25,6 @@ class Household(abce.Agent, abce.Household, abce.Trade):
     def consumption(self):
         """ consumes_everything and logs the aggregate utility. current_utiliy
         """
-        current_utiliy = self.consume_everything()
+        current_utiliy = self.consume(self.utility_function, ['consumption_good'])
         self.accumulated_utility += current_utiliy
         self.log('HH', {'': self.accumulated_utility})
