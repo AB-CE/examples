@@ -25,8 +25,8 @@ def main():
                     agents.firstfriday()
                 if day == 15:
                     agents.fiveteens()
-        agents.panel_log(possessions=['money'])
-        agents.agg_log(possessions=['labor'])
+        agents.panel_log(goods=['money'])
+        agents.agg_log(goods=['labor'])
     simulation.finalize()
 
 
