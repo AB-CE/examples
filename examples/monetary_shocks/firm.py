@@ -20,7 +20,7 @@ def normalized_random(length):
 
 class Firm(abce.Agent, abce.Firm):
     def init(self, num_firms, alpha, gamma, price_stickiness, dividends_percent, network_weight_stickiness, time_of_intervention,
-        neighbors, **trash):
+             neighbors, **trash):
         self.num_firms = num_firms
         self.alpha = alpha
         self.gamma = gamma
@@ -34,7 +34,7 @@ class Firm(abce.Agent, abce.Firm):
         self.mygood = good_from_id(self.id)
         prices = [1.0 for _ in self.neighbors]
         prices.append(1.0)
-        prices =  np.array(prices, dtype=float)
+        prices = np.array(prices, dtype=float)
         self.neighbor_prices = prices[:-1]
         self.wage = prices[-1]
 

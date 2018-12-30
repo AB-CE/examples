@@ -44,12 +44,12 @@ def main():
     network = [{'neighbors': network.neighbors(neighbor)} for neighbor in range(simulation_parameters['num_firms'])]
     firms = s.build_agents(Firm, 'firm', **simulation_parameters,
                            agent_parameters=[n for n in network])
-    household = s.build_agents(Household, 'household', 1, 
-                               num_firms=simulation_parameters['num_firms'], 
+    household = s.build_agents(Household, 'household', 1,
+                               num_firms=simulation_parameters['num_firms'],
                                wage_stickiness=simulation_parameters['wage_stickiness'])
-    centralbank = s.build_agents(CentralBank, 'centralbank', 1, 
+    centralbank = s.build_agents(CentralBank, 'centralbank', 1,
                                  time_of_intervention=simulation_parameters['time_of_intervention'],
-                                 percentage_injection=simulation_parameters['percentage_injection'], 
+                                 percentage_injection=simulation_parameters['percentage_injection'],
                                  percentage_beneficiaries=simulation_parameters['percentage_beneficiaries'])
 
     for rnd in range(simulation_parameters['rounds']):
@@ -68,7 +68,7 @@ def main():
         firms.agg_log(goods=['money'],
                       variables=['produced', 'profit', 'price', 'dead', 'inventory', 'rationing'])
         (household + firms).refresh_services('labor', 'labor_endowment', units=1)
-    
+
     s.graphs()
 
 

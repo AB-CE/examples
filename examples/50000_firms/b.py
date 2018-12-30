@@ -49,8 +49,8 @@ import os
 import time
 import multiprocessing as mp
 from multiprocessing.managers import BaseManager
-import abcEconomics as abce.db
-import abcEconomics as abce.abcelogger
+import abcEconomics.db as db
+import abcEconomics.abcelogger as abcelogger
 from . import postprocess
 from glob import glob
 from .firmmultitechnologies import *
@@ -190,7 +190,7 @@ class Simulation(object):
 
         manager = mp.Manager()
         self.database_queue = manager.Queue()
-        self._db = abce.db.Database(
+        self._db = db.Database(
             self.path, self.database_queue, trade_log=self.trade_logging_mode != 'off')
         self.logger_queue = manager.Queue()
 
@@ -462,7 +462,7 @@ class Simulation(object):
             simulation.network(savefig=True)
         """
         self._network_drawing_frequency = frequency
-        self._logger = abce.abcelogger.AbceLogger(self.path,
+        self._logger = abcelogger.AbceLogger(self.path,
                                                   self.logger_queue,
                                                   savefig=savefig,
                                                   savegml=savegml,

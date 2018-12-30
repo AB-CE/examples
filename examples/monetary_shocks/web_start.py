@@ -62,7 +62,7 @@ def main(simulation_parameters):
                           variables=['utility', 'rationing'])
         firms.agg_log(possessions=['money'],
                       variables=['produced', 'profit', 'price', 'dead', 'inventory', 'rationing'])
-    
+
         (household + firms).refresh_services('labor', 'labor_endowment', units=1)
     s.finalize()
 

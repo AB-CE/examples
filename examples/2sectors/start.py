@@ -8,7 +8,8 @@ from household import Household
 
 simulation_parameters = {'name': 'name',
                          'trade_logging': 'off',
-                         'random_seed': None,                         'rounds': 10}
+                         'random_seed': None,
+                         'rounds': 10}
 
 def main(simulation_parameters):
     w = Simulation()
