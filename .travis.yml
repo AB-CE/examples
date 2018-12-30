@@ -13,7 +13,7 @@ install:
   - pip install flake8
 
 script:
-  - flake8 examples --ignore=F403,E501,E123,E128,F401,F405,E402,F821,F841,E721,E265,F811,E302,E303,E741,E305
+  - flake8 examples --ignore=F403,E501,E123,E128,F401,F405,E402,F821,F841,E721,E265,F811,E302,E303,E741,E305,W504
   - cd examples
   - cd 2sectors && python start.py && cd ..
   #- cd 50000_firms && python start.py && cd ..
