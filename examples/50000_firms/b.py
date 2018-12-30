@@ -462,14 +462,15 @@ class Simulation(object):
             simulation.network(savefig=True)
         """
         self._network_drawing_frequency = frequency
-        self._logger = abcelogger.AbceLogger(self.path,
-                                                  self.logger_queue,
-                                                  savefig=savefig,
-                                                  savegml=savegml,
-                                                  figsize=figsize,
-                                                  dpi=dpi,
-                                                  pos_fixed=pos_fixed,
-                                                  alpha=alpha)
+        self._logger = abcelogger.AbceLogger(
+            self.path,
+            self.logger_queue,
+            savefig=savefig,
+            savegml=savegml,
+            figsize=figsize,
+            dpi=dpi,
+            pos_fixed=pos_fixed,
+            alpha=alpha)
         self._logger.start()
 
     def execute_internal_seriel(self, command):
