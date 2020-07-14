@@ -6,7 +6,7 @@
     timeline.
 """
 
-from abcEconomics import Simulation, gui
+from abcEconomics import Simulation
 from firm import Firm
 from household import Household
 
@@ -15,13 +15,8 @@ parameters = {'name': '2x2',
               'rounds': 2500,
               'num_firms': 10}
 
-#@gui(parameters)
 def main(parameters):
     simulation = Simulation(processes=1)
-    simulation.declare_round_endowment(resource='adult',
-                                       units=1,
-                                       product='labor')
-    simulation.declare_perishable(good='labor')
 
     firms = simulation.build_agents(
         Firm, 'firm', number=parameters['num_firms'])
@@ -31,6 +26,7 @@ def main(parameters):
     try:
         for rnd in range(parameters['rounds']):
             simulation.advance_round(rnd)
+            households.refresh_services('labor', derived_from='adult', units=1)
             households.sell_labor()
             firms.buy_labor()
             firms.production()
