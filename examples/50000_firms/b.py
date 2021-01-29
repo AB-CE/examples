@@ -34,7 +34,7 @@ This is a minimal template for a start.py::
         agents.do('one')
         agents.do('two')
         agents.do('three')
-    simulation.graphs()
+    simulation.finalize()
 """
 from __future__ import division
 from __future__ import print_function
@@ -137,7 +137,7 @@ class Simulation(object):
             all.do('after_sales_before_consumption')
             households.do('consume')
 
-        w.graphs()
+        w.finalize()
     """
 
     def __init__(self, rounds, name='abce', random_seed=None, trade_logging='off', processes=None):

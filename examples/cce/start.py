@@ -138,7 +138,6 @@ def main(simulation_parameters):
     iotable.to_iotable(simulation.path, [99, simulation_parameters['rounds'] - 1])
     mean_price = iotable.average_price(simulation.path, 99)
     print('mean price', mean_price)
-    # simulation.graphs()
     return mean_price
 
 def F(money):

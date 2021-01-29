@@ -69,7 +69,7 @@ def main():
                       variables=['produced', 'profit', 'price', 'dead', 'inventory', 'rationing'])
         (household + firms).refresh_services('labor', 'labor_endowment', units=1)
 
-    s.graphs()
+    s.finalize()
 
 
 if __name__ == '__main__':

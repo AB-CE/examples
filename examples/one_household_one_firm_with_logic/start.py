@@ -41,7 +41,7 @@ def main(parameters):
             firms.adjust_price()
     except Exception as e:
         print(e)
-    # simulation.graphs()
+    simulation.finalize()
 
 
 if __name__ == '__main__':

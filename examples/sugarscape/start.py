@@ -49,7 +49,7 @@ def main():
         agents.trade()
         agents.agg_log(possessions=['sugar', 'spice'])
 
-    s.graphs()
+    s.finalize()
 
 
 if __name__ == '__main__':
