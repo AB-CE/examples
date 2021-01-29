@@ -9,14 +9,13 @@ The firms sets the prices using a PID controller.
 from __future__ import division
 from firm import Firm
 from household import Household
-from abcEconomics import Simulation, gui
+from abcEconomics import Simulation
 
 
 simulation_parameters = {'random_seed': None,
                          'rounds': 300}
 
 
-@gui(simulation_parameters)
 def main(simulation_parameters):
     s = Simulation()
 
