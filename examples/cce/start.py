@@ -2,7 +2,7 @@ from firm import Firm
 from household import Household
 from netexport import NetExport
 from government import Government
-from abcEconomics import Simulation, gui
+from abcEconomics import Simulation
 from collections import OrderedDict, defaultdict
 from sam_to_functions import Sam
 import iotable
@@ -46,8 +46,6 @@ names = {'carbon_tax': 'Tax per ton of carbon in US dollars',
 
 simulation_parameters['trade_logging'] = 'group'
 
-@gui(simulation_parameters,
-     texts=[text], title=title, names=names, truncate_rounds=50)
 def main(simulation_parameters):
     sam = Sam('climate_square.sam.csv',
               inputs=['col', 'ele', 'gas', 'o_g', 'oil', 'eis', 'trn', 'roe', 'lab', 'cap'],

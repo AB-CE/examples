@@ -10,7 +10,7 @@ from __future__ import division
 from multiprocessing import freeze_support
 from firm import Firm
 from market import Market
-from abcEconomics import Simulation, gui
+from abcEconomics import Simulation
 
 
 simulation_parameters = {'name': "analytical",
@@ -18,7 +18,6 @@ simulation_parameters = {'name': "analytical",
                          'rounds': 3000}
 
 
-@gui(simulation_parameters)
 def main(simulation_parameters):
     s = Simulation()
 
